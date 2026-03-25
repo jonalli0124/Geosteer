@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GEO STEER</title>
+<title>GEOSTEER</title>
 <style>*{margin:0;padding:0;box-sizing:border-box;}body{background:#000;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;}canvas{display:block;}</style>
 </head>
 <body>
@@ -26,7 +26,7 @@ const BC={0:"",1:"#8a6a20",2:"#b89030",3:"#d8b040",4:"#4a5060",5:"#7a8898",6:"#a
 const BCK={0:"",1:"#6a2020",2:"#983030",3:"#c04040",4:"#3a2028",5:"#6a3848",6:"#a06060",7:"#e06060"};
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function lerp(a,b,t){return a+(b-a)*clamp(t,0,1)}
-function diff(ft){return 1.0+ft/4000}
+function diff(ft){return 1.0+ft/2500+Math.pow(ft/8000,2)}
 
 // Load sprites
 const bitSheet=new Image();
@@ -36,7 +36,7 @@ const BIT_FW=70,BIT_FH=28,BIT_FRAMES=4;
 // Rig sprite for VS panel
 const rigImg=new Image();rigImg.src="data:image/png;base64,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";
 let rigReady=false;rigImg.onload=()=>{rigReady=true;};
-function genTerrain(){const s=[];let base=0,fCD=0,dip=0;for(let i=0;i<5000;i++){dip+=(Math.random()-0.48)*0.5;dip=clamp(dip,-1.5,1.5);base+=dip;base=clamp(base,-55,55);let fault=false,fTh=0;fCD--;if(i>3&&fCD<=0&&Math.random()<0.13){const mx=40+(i/5000)*260;fTh=(Math.random()>0.5?1:-1)*(25+Math.random()*mx);base+=clamp(fTh*0.4,-45,45);base=clamp(base,-70,70);fault=true;fCD=1+Math.floor(Math.random()*4);}let thief=false;if(!fault&&Math.random()<0.03)thief=true;s.push({base,fault,fTh:Math.abs(fTh),gas:!fault&&Math.random()<0.04,thief});}for(let i=0;i<s.length;i++){if(s[i].thief){const span=2+Math.floor(Math.random()*4);for(let j=1;j<=span&&i+j<s.length;j++)s[i+j].thief=true;i+=span;}}return s;}
+function genTerrain(){const s=[];let base=0,fCD=0,dip=0;for(let i=0;i<5000;i++){dip+=(Math.random()-0.48)*0.5;dip=clamp(dip,-1.5,1.5);base+=dip;base=clamp(base,-55,55);let fault=false,fTh=0;fCD--;if(i>3&&fCD<=0&&Math.random()<0.13){const mx=40+(i/5000)*260;fTh=(Math.random()>0.5?1:-1)*(25+Math.random()*mx);base+=clamp(fTh*0.4,-45,45);base=clamp(base,-70,70);fault=true;fCD=1+Math.floor(Math.random()*4);}let thief=false;if(!fault&&Math.random()<0.025)thief=true;s.push({base,fault,fTh:Math.abs(fTh),gas:!fault&&Math.random()<0.04,thief});}for(let i=0;i<s.length;i++){if(s[i].thief){const span=3+Math.floor(Math.random()*6);for(let j=1;j<=span&&i+j<s.length;j++)s[i+j].thief=true;i+=span;}}return s;}
 function getBounds(cY,off,h){const sc=h*0.95,bs=[];let a=0;for(let i=0;i<FM.length;i++){const top=cY+off-sc/2+(a/FMT)*sc;a+=FM[i].th;bs.push({fm:FM[i],top,bot:cY+off-sc/2+(a/FMT)*sc});}return bs;}
 
 let g,inp={u:0,d:0,l:0,r:0,mU:0,mD:0,sld:0,lcm:0};
@@ -70,7 +70,7 @@ if(kick){ctx.globalAlpha=1;ctx.filter="none";}
 }else{
 const PX=4,cols=kick?BCK:BC;for(let r=0;r<BIT.length;r++)for(let c=0;c<BIT[0].length;c++){const v=BIT[r][c];if(!v)continue;ctx.fillStyle=cols[v];ctx.fillRect(cx-BIT[0].length*PX/2+PX*3+c*PX,cy-BIT.length*PX/2+r*PX,PX,PX);}
 }}
-function drawTank(x,y,w,h,level,danger){ctx.strokeStyle="#555";ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);const fillH=h*clamp(level/600,0,1);ctx.fillStyle=danger?(level>500?"#cc2222":"#cc8822"):"#228844";ctx.fillRect(x+1,y+h-fillH,w-2,fillH);const nomY=y+h*(1-500/600);ctx.strokeStyle="#00ff4466";ctx.lineWidth=1;ctx.setLineDash([3,2]);ctx.beginPath();ctx.moveTo(x,nomY);ctx.lineTo(x+w,nomY);ctx.stroke();ctx.setLineDash([]);ctx.font=`bold ${Math.max(11,w*0.32)}px 'Courier New',monospace`;ctx.fillStyle=danger?"#ff4444":"#ddd";ctx.textAlign="center";ctx.fillText(`${level.toFixed(0)}`,x+w/2,y+h+15);ctx.font=`${Math.max(9,w*0.24)}px 'Courier New',monospace`;ctx.fillStyle="#888";ctx.fillText("bbl",x+w/2,y+h+26);if(level>515){ctx.fillStyle="#ff4444aa";ctx.font=`bold ${Math.max(14,w*0.4)}px monospace`;ctx.fillText("▲",x+w/2,y-5);}else if(level<485){ctx.fillStyle="#4488ccaa";ctx.font=`bold ${Math.max(14,w*0.4)}px monospace`;ctx.fillText("▼",x+w/2,y-5);}ctx.textAlign="left";}
+function drawTank(x,y,w,h,level,danger){ctx.strokeStyle="#555";ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);const fillH=h*clamp(level/750,0,1);ctx.fillStyle=danger?(level>500?"#cc2222":"#cc8822"):"#228844";ctx.fillRect(x+1,y+h-fillH,w-2,fillH);const nomY=y+h*(1-500/750);ctx.strokeStyle="#00ff4466";ctx.lineWidth=1;ctx.setLineDash([3,2]);ctx.beginPath();ctx.moveTo(x,nomY);ctx.lineTo(x+w,nomY);ctx.stroke();ctx.setLineDash([]);ctx.font=`bold ${Math.max(11,w*0.32)}px 'Courier New',monospace`;ctx.fillStyle=danger?"#ff4444":"#ddd";ctx.textAlign="center";ctx.fillText(`${level.toFixed(0)}`,x+w/2,y+h+15);ctx.font=`${Math.max(9,w*0.24)}px 'Courier New',monospace`;ctx.fillStyle="#888";ctx.fillText("bbl",x+w/2,y+h+26);if(level>530){ctx.fillStyle="#ff4444aa";ctx.font=`bold ${Math.max(14,w*0.4)}px monospace`;ctx.fillText("▲",x+w/2,y-5);}else if(level<470){ctx.fillStyle="#4488ccaa";ctx.font=`bold ${Math.max(14,w*0.4)}px monospace`;ctx.fillText("▼",x+w/2,y-5);}ctx.textAlign="left";}
 
 let lastFrameTime=0;
 const FRAME_MS=1000/60; // cap at 60fps
@@ -92,7 +92,7 @@ if(g.fr%80===0){g.drift+=(Math.random()-0.5)*0.025*d;g.drift=clamp(g.drift,-0.03
 
 // Slide mechanic
 if(g.slideOverheat){g.slideOhTimer--;g.slide=false;inp.sld=0;if(g.slideOhTimer<=0){g.slideOverheat=false;addN("MOTOR COOLED","info");}}else{g.slide=!!inp.sld;}
-if(g.slide){g.slideFr++;g.slideHeat+=0.15;}else{g.slideHeat=Math.max(0,g.slideHeat-0.08);}
+if(g.slide){g.slideFr++;g.slideHeat+=0.10;}else{g.slideHeat=Math.max(0,g.slideHeat-0.12);}
 if(g.slideHeat>=100&&!g.slideOverheat){g.slideOverheat=true;g.slideOhTimer=180;addN("MOTOR OVERHEAT!","danger");}
 
 const sm=g.slide?1.8:0.55;
@@ -105,7 +105,9 @@ const ftSD=g.ft-g.lastDlsFt;
 if(ftSD>=10){const incD=Math.abs(g.inc-g.prevInc);g.dls=(incD/ftSD)*100;g.prevInc=g.inc;g.lastDlsFt=g.ft;g.dlsHist.push(g.dls);if(g.dlsHist.length>200)g.dlsHist.shift();g.maxDls=Math.max(g.maxDls,g.dls);g.dlsSum+=g.dls;g.dlsCt++;g.avgDls=g.dlsSum/g.dlsCt;}
 
 // Speed — slide penalty caps your max speed
-const maxSpd=g.slide?1.8:2.8;
+// Max speed decays with footage — longer wellbore = more friction
+const spdDecay=Math.max(0.4,1.0-g.ft*0.00004); // 1.0 at 0', 0.6 at 10K', 0.4 at 15K'+
+const maxSpd=(g.slide?1.8:2.8)*spdDecay;
 if(inp.r)g.spd=Math.min(g.spd+0.016,maxSpd);
 if(inp.l)g.spd=Math.max(g.spd-0.016,0.12);
 if(!inp.l&&!inp.r)g.spd=lerp(g.spd,g.slide?SCROLL_BASE*0.6:SCROLL_BASE,0.005);
@@ -114,10 +116,10 @@ g.ft=g.sx*2.5; // footage from scroll position
 
 // ROP display: map speed to 0-400 ft/hr for display
 // speed 0.12→17 ft/hr, speed 0.7→100 ft/hr, speed 2.8→400 ft/hr
-g.rop=g.spd*(400/2.8);
+g.rop=g.spd*(300/2.8);
 
-if(inp.mU)g.mw=Math.min(g.mw+0.008,16.5);
-if(inp.mD){g.mw=Math.max(g.mw-0.008,8.5);if(g.mudOnLoc>0)g.mudOnLoc-=0.01;}
+if(inp.mU&&g.mudOnLoc>0){g.mw+=0.008;}
+if(inp.mD){g.mw=Math.max(g.mw-0.008,9.0);}
 
 // LCM
 if(inp.lcm&&g.lcm>0&&!g.lcmActive){g.lcm--;g.lcmActive=true;g.lcmTimer=300;addN("LCM! ("+g.lcm+" left)","info");if(g.loss)g.lossSev*=0.2;g.thiefTimer=0;inp.lcm=0;}
@@ -128,12 +130,11 @@ if(g.lcmActive){g.lcmTimer--;if(g.lcmTimer<=0)g.lcmActive=false;}
 const walkRate=g.bwRate*(1+g.ft/5000);
 if(!g.slide){
   // Rotary: bit walks RIGHT (positive azi) — gets worse with footage
-  g.azi+=walkRate*g.spd*0.025*(1+Math.sin(g.fr*0.003)*0.3);
+  g.azi+=walkRate*g.spd*0.060*(1+Math.sin(g.fr*0.003)*0.3);
 }else{
-  // Slide: corrects toward center — if right of center push left, if left push right
-  const correctionRate=walkRate*g.spd*0.020;
-  if(g.azi>0)g.azi-=correctionRate;
-  else if(g.azi<0)g.azi+=correctionRate;
+  // Slide: always walks LEFT — toolface set left to correct the right walk
+  const correctionRate=walkRate*g.spd*0.025;
+  g.azi-=correctionRate;
 }
 g.leaseW=Math.abs(g.azi)>LEASE_HALF*0.68;if(Math.abs(g.azi)>LEASE_HALF)die("OUT OF LEASE!");
 
@@ -207,32 +208,48 @@ if(bitSY<xsY+3||bitSY>xsY+xsH-3)die("LOST HOLE!");
 const s1=g.terr[si];if(s1.fault&&g.fFl===0){g.fFl=35;addN(`FAULT ${s1.fTh.toFixed(0)}'`,"warn");}if(g.fFl>0)g.fFl--;
 
 // Thief zones — lower the local frac gradient, so high MW = losses
-const thiefFracPenalty=s1.thief?0.8*d:0; // thief zones drop frac gradient significantly
+// Thief zone detection
 if(s1.thief&&!g.thiefActive&&!g.lcmActive){g.thiefActive=true;g.thiefTimer=180;addN("THIEF ZONE!","danger");}
 if(g.thiefActive){g.thiefTimer--;if(g.thiefTimer<=0)g.thiefActive=false;}if(!s1.thief&&!g.thiefActive)g.thiefActive=false;
 
-// Pore pressure creep — PP rises with footage, squeezing MW window
-g.ppCreep=g.ft*0.00008; // +0.8 ppg over 10,000'
-const effPP=cf.pp+g.ppCreep; // effective pore pressure
-const effFrac=cf.frac-g.ppCreep*0.3-thiefFracPenalty; // frac drops in thief zones!
+// MW WINDOW — always 0.5 ppg wide, PP creeps with footage
+// PP: 12.5 at 0' → 14.0 at 15K' → caps at 14.5
+const effPP=Math.min(12.5+g.ft*0.00015,15.5);
+const baseFrac=effPP+0.5; // always 0.5 above PP
+// Thief zones drop frac by 1.5 ppg, but floor at 10.0
+const effFrac=g.thiefActive&&!g.lcmActive?Math.max(effPP-0.5,10.0):baseFrac;
 
-// Kicks — MW below PP = pit gains. Only when NOT in thief zone (low MW is safe there)
-if(!g.thiefActive&&g.mw<effPP+0.3&&!g.kick&&Math.random()<0.008*d){g.kick=true;g.kickSev=(effPP-g.mw+0.5)*0.3*d;}
-if(g.kick){g.pit+=g.kickSev*0.03;g.kickSev+=0.0005*d;if(g.mw>effPP){g.kickSev-=0.008;if(g.kickSev<=0){g.kick=false;g.kickSev=0;}}if(g.pit>700)die("BLOWOUT!");if(g.kickSev>10)die("KICK UNCONTROLLED!");}else{g.pit=lerp(g.pit,500,0.01);}
+// KICKS — MW below PP and NOT in thief zone. Low MW in thief zone is intentional.
+if(!g.thiefActive&&g.mw<effPP&&!g.kick&&Math.random()<0.01*d){g.kick=true;g.kickSev=(effPP-g.mw+0.3)*0.4*d;}
+if(g.kick){
+  const gap=Math.max(0,effPP-g.mw); // how far below PP
+  if(g.thiefActive){g.kick=false;g.kickSev=0;} // thief zone kills kick instantly
+  else if(g.mw>=effPP){g.kickSev-=0.003;if(g.kickSev<=0){g.kick=false;g.kickSev=0;}} // above PP: slow kill
+  else{g.pit+=g.kickSev*0.05*(1+gap*2);g.kickSev+=0.001*d;} // below PP: bigger gap = faster pit gain
+  if(g.pit>750)die("BLOWOUT!");
+}
+if(!g.kick&&!g.loss){g.pit=lerp(g.pit,500,0.02);}
 
-// Losses — MW above effective frac = pit losses. Thief zones make frac much lower!
-if(!g.loss&&!g.lcmActive&&g.mw>(effFrac-0.15)&&Math.random()<(g.thiefActive?0.03:0.008)*d){g.loss=true;g.lossSev=(g.mw-effFrac+0.5)*0.3*d;}
-if(g.loss){const lr=g.lcmActive?0.01:0.04;g.pit-=g.lossSev*lr;g.lossSev+=g.lcmActive?0.0002:0.0007*d;if(g.mw<effFrac){g.lossSev-=0.008;if(g.lossSev<=0){g.loss=false;g.lossSev=0;}}if(g.pit<=0)die("LOST ALL MUD!");if(g.lossSev>6)die("TOTAL LOSSES!");}
-g.mudOnLoc=Math.max(0,g.mudOnLoc-0.002);if(g.mudOnLoc<=0&&g.pit<=0)die("NO MUD!");
+// LOSSES — MW above effFrac (normal or thief-reduced). Get MW <= effFrac = losses die.
+if(!g.loss&&!g.lcmActive&&g.mw>effFrac&&Math.random()<(g.thiefActive?0.05:0.01)*d){g.loss=true;g.lossSev=(g.mw-effFrac+0.2)*0.3*d;}
+if(g.loss){if(g.mw<=effFrac){g.loss=false;g.lossSev=0;}else{const lr=g.lcmActive?0.01:0.04;g.pit-=g.lossSev*lr;g.lossSev+=g.lcmActive?0.0002:0.0007*d;}if(g.pit<=250)die("LOST ALL MUD!");}
+
+// MUD ON LOCATION — costs mud when weighting up to fight kicks or catch PP creep
+// In thief zone: no mud cost (low MW is intentional)
+// In window with no issues: no mud cost (maintaining, not adding weight)
+if(inp.mU&&g.mudOnLoc>0&&!g.thiefActive&&g.mw<effPP)g.mudOnLoc-=0.08;
+if(g.loss&&g.mw>effFrac&&g.pit<500)g.mudOnLoc-=0.15*g.lossSev;
+g.mudOnLoc=Math.max(0,g.mudOnLoc);
+if(g.mudOnLoc<=0&&g.pit<=250)die("NO MUD!");
 
 // Comment
 if(g.thiefActive)g.cmt=`THIEF ZONE! CUT WEIGHT [2] or LCM [4]`;
-else if(g.pit>530)g.cmt=`PIT GAIN +${(g.pit-500).toFixed(0)}bbl — WT UP [1]`;
-else if(g.pit<470)g.cmt=`PIT LOSS -${(500-g.pit).toFixed(0)}bbl — CUT WT [2]`;
+else if(g.pit>550)g.cmt=`PIT GAIN +${(g.pit-500).toFixed(0)}bbl — WT UP [1]`;
+else if(g.pit<450)g.cmt=`PIT LOSS -${(500-g.pit).toFixed(0)}bbl — CUT WT [2]`;
 else if(g.leaseW)g.cmt=`LEASE! AZI:${g.azi.toFixed(0)}' — SLIDE [3]`;
 else if(g.slideOverheat)g.cmt=`OVERHEAT! Rotate ${Math.ceil(g.slideOhTimer/60)}s`;
 else if(g.oozFt>400)g.cmt=`OOZ ${g.oozFt.toFixed(0)}'/${g.oozMax}'`;
-else if(inZone){const ePP=(cf.pp+g.ppCreep).toFixed(1),eFr=(cf.frac-g.ppCreep*0.3-(s1.thief&&!g.lcmActive?0.8*d:0)).toFixed(1);g.cmt=`In zone | MW:${g.mw.toFixed(1)} Window:${ePP}-${eFr} | $${g.costPerFt.toFixed(0)}/ft`;}
+else if(inZone){g.cmt=`In zone | MW:${g.mw.toFixed(1)} Window:${effPP.toFixed(1)}-${effFrac.toFixed(1)} | $${g.costPerFt.toFixed(0)}/ft`;}
 else g.cmt=`${cf.n} — OUT OF ZONE ${g.oozFt.toFixed(0)}'`;
 g.notifs=g.notifs.filter(n=>g.fr-n.b<220);
 }
@@ -243,33 +260,36 @@ ctx.clearRect(0,0,W,H);
 if(g.ph==="title"){
 ctx.fillStyle="#000";ctx.fillRect(0,0,W,H);
 const py=H*0.10,ph=H*0.22;let acc=0;
-for(let i=0;i<FM.length;i++){const fy=py+(acc/FMT)*ph;acc+=FM[i].th;const fh=(FM[i].th/FMT)*ph;const gr=ctx.createLinearGradient(0,fy,0,fy+fh);gr.addColorStop(0,FM[i].t);gr.addColorStop(1,FM[i].b);ctx.fillStyle=gr;ctx.fillRect(W*0.05,fy,W*0.9,fh);if(FM[i].tgt){ctx.strokeStyle="#00ff4466";ctx.lineWidth=2;ctx.strokeRect(W*0.05,fy,W*0.9,fh);}if(fh>7){ctx.font=`${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle=FM[i].tgt?"#00ff44":"#999";ctx.fillText(FM[i].n+(FM[i].tgt?" ◄ BEST GAS":""),W*0.07,fy+fh/2+4);}}
-const by=py+ph*0.42;ctx.strokeStyle="#4a6a8e";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(W*0.12,by);ctx.lineTo(W*0.64,by);ctx.stroke();drawBit(W*0.69,by,false);
-ctx.textAlign="center";ctx.shadowColor="#00ff44";ctx.shadowBlur=20;ctx.font=`bold ${Math.round(34*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("GEO STEER",W/2,H*0.06);ctx.shadowBlur=0;
-ctx.font=`${Math.round(13*S)}px 'Courier New',monospace`;ctx.fillStyle="#ee8800";ctx.fillText("SURVIVAL DRILLING SIMULATOR",W/2,H*0.09);
+for(let i=0;i<FM.length;i++){const fy=py+(acc/FMT)*ph;acc+=FM[i].th;const fh=(FM[i].th/FMT)*ph;const gr=ctx.createLinearGradient(0,fy,0,fy+fh);gr.addColorStop(0,FM[i].t);gr.addColorStop(1,FM[i].b);ctx.fillStyle=gr;ctx.fillRect(W*0.05,fy,W*0.9,fh);if(FM[i].tgt){ctx.strokeStyle="#00ff4466";ctx.lineWidth=2;ctx.strokeRect(W*0.05,fy,W*0.9,fh);}if(fh>7){ctx.font=`${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle=FM[i].tgt?"#00ff44":"#999";ctx.fillText(FM[i].n+(FM[i].tgt?" ◄ TARGET":""),W*0.07,fy+fh/2+4);}}
+const by=py+(22+4)/76*ph;drawBit(W*0.62,by,false);
+ctx.textAlign="center";ctx.shadowColor="#00ff44";ctx.shadowBlur=20;ctx.font=`bold ${Math.round(34*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("GEOSTEER",W/2,H*0.06);ctx.shadowBlur=0;
+ctx.font=`${Math.round(13*S)}px 'Courier New',monospace`;ctx.fillStyle="#ee8800";ctx.fillText("SURVIVAL HORIZONTAL DRILLING SIMULATOR",W/2,H*0.09);
 ctx.font=`bold ${Math.round(11*S)}px 'Courier New',monospace`;
-[{t:"LOWEST $/FT WINS — $92/ft IS A GOOD WELL",c:"#ddcc00"},{t:"",c:""},
-{t:"▲▼ STEER  ◀▶ SPEED (up to 400 ft/hr)",c:"#00dd44"},
-{t:"[1] WT UP  [2] WT DOWN  [3] SLIDE  [4] LCM",c:"#ddaa00"},{t:"",c:""},
-{t:"DRILL FAST + IN ZONE = LOW $/FT",c:"#00ff44"},
-{t:"SLOW / OUT OF ZONE / SLIDING = EXPENSIVE",c:"#ff4444"},
-{t:"THIEF ZONES DRAIN YOUR PIT — LCM [4]",c:"#ff8844"},
-{t:"1000' OUT OF ZONE = FAIL",c:"#ff4444"},
-{t:"CLEAN DLS = 12% COST SAVINGS",c:"#ddcc00"},
+[{t:"DRILL THE LONGEST WELL AT THE LOWEST COST",c:"#00ffcc"},{t:"",c:""},
+{t:"▲▼ STEER TO STAY IN THE GREEN TARGET ZONE",c:"#00dd44"},
+{t:"◀▶ CONTROL SPEED — FASTER = CHEAPER PER FOOT",c:"#00dd44"},
+{t:"[3] SLIDE TO CORRECT BIT WALK & STAY IN LEASE",c:"#ddaa00"},{t:"",c:""},
+{t:"WATCH THE MW WINDOW [12.5-13.0] IN THE HUD",c:"#44aaff"},
+{t:"[1] WEIGHT UP  [2] CUT WEIGHT — STAY IN RANGE",c:"#44aaff"},
+{t:"ORANGE ZONES AHEAD = THIEF ZONES — CUT WEIGHT EARLY",c:"#ff8844"},
+{t:"AFTER THIEF ZONES, WEIGHT BACK UP TO AVOID KICKS",c:"#ddcc00"},
+{t:"WEIGHTING UP USES MUD ON SURFACE — IT'S FINITE!",c:"#ff4444"},
+{t:"[4] LCM TO BLOCK THIEF ZONES (5 TREATMENTS)",c:"#44aaff"},
+{t:"THE DEEPER YOU GO, THE HARDER EVERYTHING GETS",c:"#ee8800"},
 ].forEach((l,i)=>{ctx.fillStyle=l.c;ctx.fillText(l.t,W/2,H*0.36+i*Math.round(16*S));});
 if(g.fr%28<14){ctx.font=`bold ${Math.round(20*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("TAP / SPACE TO DRILL",W/2,H*0.93);}
 ctx.textAlign="left";requestAnimationFrame(tick);return;}
 
 const fmO=(TGT_FRAC-0.5)*xsH*0.95;
 // HEADER
-ctx.fillStyle="#0a0a0a";ctx.fillRect(0,0,W,hdrH);ctx.font=`bold ${Math.round(13*S)}px 'Courier New',monospace`;ctx.fillStyle="#ee8800";ctx.fillText("GEO STEER",5,hdrH*0.65);
+ctx.fillStyle="#0a0a0a";ctx.fillRect(0,0,W,hdrH);ctx.font=`bold ${Math.round(13*S)}px 'Courier New',monospace`;ctx.fillStyle="#ee8800";ctx.fillText("GEOSTEER",5,hdrH*0.65);
 ctx.textAlign="center";ctx.fillStyle="#eee";ctx.fillText(`${g.ft.toFixed(0)}'`,W*0.20,hdrH*0.65);
 ctx.fillStyle="#aaa";ctx.fillText(`ROP:${g.rop.toFixed(0)}`,W*0.33,hdrH*0.65);
 ctx.fillStyle=g.costPerFt<100?"#00ff44":g.costPerFt<130?"#ddcc00":"#ff4444";ctx.font=`bold ${Math.round(15*S)}px 'Courier New',monospace`;ctx.fillText(`$${g.costPerFt.toFixed(0)}/ft`,W*0.48,hdrH*0.65);
 ctx.font=`bold ${Math.round(11*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff8844";ctx.fillText(`MUD:${g.mudOnLoc.toFixed(0)}`,W*0.62,hdrH*0.65);
 ctx.fillStyle=g.lcm>0?"#44aaff":"#882222";ctx.fillText(`LCM:${g.lcm}`,W*0.74,hdrH*0.65);
 const shC=g.slideHeat>70?"#ff4444":g.slideHeat>40?"#ddaa00":"#228844";ctx.fillStyle=shC;ctx.fillText(`SLD:${g.slideHeat.toFixed(0)}%`,W*0.86,hdrH*0.65);
-ctx.textAlign="right";ctx.fillStyle="#888";ctx.font=`${Math.round(10*S)}px 'Courier New',monospace`;ctx.fillText(`$${(g.costTotal/1000).toFixed(0)}K`,W-5,hdrH*0.65);ctx.textAlign="left";
+ctx.textAlign="right";const liveScore=g.costPerFt>0?Math.round(g.ft*92/g.costPerFt):0;ctx.fillStyle="#00ffcc";ctx.font=`bold ${Math.round(11*S)}px 'Courier New',monospace`;ctx.fillText(`${liveScore.toLocaleString()}`,W-5,hdrH*0.65);ctx.textAlign="left";
 
 // TOP: VS + GR/gas + gamma
 const topY=hdrH;ctx.fillStyle="#0a0e08";ctx.fillRect(0,topY,vsW,topH);
@@ -286,7 +306,7 @@ const bpX=pCX+(g.azi/LEASE_HALF)*lpH;ctx.fillStyle=g.leaseW?"#ff4400":"#ffcc00";
 ctx.font=`bold ${Math.round(9*S)}px 'Courier New',monospace`;ctx.fillStyle=g.leaseW?"#ff6644":"#44ff44";ctx.textAlign="center";ctx.fillText(`AZI:${g.azi.toFixed(0)}'`,vsW/2,pB+Math.round(8*S));ctx.textAlign="left";ctx.strokeStyle="#333";ctx.lineWidth=1;ctx.strokeRect(0,topY,vsW,topH);
 ctx.fillStyle="#0a0a0a";ctx.fillRect(vsW,topY,W-vsW,topH);const barX=vsW,barW=W-vsW-grW,mxB=Math.floor(barW/3),rec=g.gl.slice(-mxB);
 for(let i=0;i<rec.length;i++){const bx=barX+(i/mxB)*barW;const bh=(rec[i].gr/200)*topH*0.7;ctx.fillStyle=rec[i].gr>80?"#882222":"#446622";ctx.fillRect(bx,topY+topH-bh,3,bh);}
-if(g.gasHist.length>1){ctx.strokeStyle="#ff2222aa";ctx.lineWidth=2;ctx.beginPath();const hist=g.gasHist.slice(-mxB);for(let i=0;i<hist.length;i++){const x=barX+(i/hist.length)*barW;const y=topY+topH-(hist[i]/1400)*topH*0.8;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}
+if(g.gasHist.length>1){ctx.strokeStyle="#ff3333";ctx.lineWidth=3;ctx.beginPath();const hist=g.gasHist.slice(-mxB);for(let i=0;i<hist.length;i++){const x=barX+(i/hist.length)*barW;const y=topY+topH-(hist[i]/1400)*topH*0.8;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}
 ctx.fillStyle="#666";ctx.font=`${Math.round(9*S)}px 'Courier New',monospace`;ctx.fillText("GR",barX+3,topY+Math.round(11*S));ctx.fillStyle="#ff4444";ctx.fillText("GAS",barX+3,topY+topH-3);
 if(g.lcmActive){ctx.fillStyle="#44aaff22";ctx.fillRect(barX,topY,barW,topH);ctx.font=`bold ${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle="#44aaff";ctx.textAlign="center";ctx.fillText(`LCM ACTIVE (${Math.ceil(g.lcmTimer/60)}s)`,barX+barW/2,topY+topH/2);ctx.textAlign="left";}
 if(g.thiefActive){ctx.fillStyle="#ff440022";ctx.fillRect(barX,topY,barW,topH);ctx.font=`bold ${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff4444";ctx.textAlign="center";ctx.fillText("THIEF ZONE!",barX+barW/2,topY+topH/2);ctx.textAlign="left";}
@@ -296,7 +316,7 @@ if(rgl0.length>1){ctx.strokeStyle="#00bbee";ctx.lineWidth=1.5;ctx.beginPath();fo
 // MAIN XS
 ctx.save();ctx.beginPath();ctx.rect(0,xsY,xsW,xsH);ctx.clip();ctx.fillStyle="#000";ctx.fillRect(0,xsY,xsW,xsH);
 const stripW=Math.max(3,Math.round(5*S));
-for(let sx=0;sx<xsW;sx+=stripW){const wx=g.sx+(sx-bitSX);const si2=clamp(Math.floor(wx/SEG_W),0,g.terr.length-2);const sf2=((wx%SEG_W)+SEG_W)%SEG_W/SEG_W;const cb2=lerp(g.terr[si2].base,g.terr[si2+1].base,sf2);const bds=getBounds(xsCY,cb2-fmOff,xsH);for(const b of bds){const h=b.bot-b.top;if(h<=0)continue;const gr=ctx.createLinearGradient(0,b.top,0,b.bot);gr.addColorStop(0,b.fm.t);gr.addColorStop(0.5,b.fm.m);gr.addColorStop(1,b.fm.b);ctx.fillStyle=gr;ctx.fillRect(sx,b.top,stripW,h);}for(const b of bds){if(b.fm.tgt){ctx.fillStyle="#00ff4455";ctx.fillRect(sx,b.top|0,stripW,2);ctx.fillRect(sx,b.bot|0,stripW,2);}}if(g.terr[si2].fault&&sf2<0.04){ctx.fillStyle="#ff00ff55";ctx.fillRect(sx,xsY,3,xsH);}if(g.terr[si2].thief){ctx.fillStyle=g.lcmActive?"#44aaff15":"#ff440025";ctx.fillRect(sx,xsY,stripW,xsH);}}
+for(let sx=0;sx<xsW;sx+=stripW){const wx=g.sx+(sx-bitSX);const si2=clamp(Math.floor(wx/SEG_W),0,g.terr.length-2);const sf2=((wx%SEG_W)+SEG_W)%SEG_W/SEG_W;const cb2=lerp(g.terr[si2].base,g.terr[si2+1].base,sf2);const bds=getBounds(xsCY,cb2-fmOff,xsH);for(const b of bds){const h=b.bot-b.top;if(h<=0)continue;const gr=ctx.createLinearGradient(0,b.top,0,b.bot);gr.addColorStop(0,b.fm.t);gr.addColorStop(0.5,b.fm.m);gr.addColorStop(1,b.fm.b);ctx.fillStyle=gr;ctx.fillRect(sx,b.top,stripW,h);}for(const b of bds){if(b.fm.tgt){ctx.fillStyle="#00ff4455";ctx.fillRect(sx,b.top|0,stripW,2);ctx.fillRect(sx,b.bot|0,stripW,2);}}if(g.terr[si2].fault&&sf2<0.04){ctx.fillStyle="#ff00ff55";ctx.fillRect(sx,xsY,3,xsH);}if(g.terr[si2].thief){ctx.fillStyle=g.lcmActive?"#44aaff20":"#ff440040";ctx.fillRect(sx,xsY,stripW,xsH);}}
 const lsi=clamp(Math.floor((g.sx-bitSX)/SEG_W),0,g.terr.length-2);const lBs=getBounds(xsCY,g.terr[lsi].base-fmOff,xsH);ctx.font=`bold ${Math.round(12*S)}px 'Courier New',monospace`;for(const b of lBs){const mid=(b.top+b.bot)/2;if(mid>xsY+3&&mid<xsY+xsH-3&&(b.bot-b.top)>14){ctx.fillStyle=b.fm.tgt?"#00ff44cc":"#ffffff55";ctx.shadowColor="#000";ctx.shadowBlur=4;ctx.fillText(b.fm.n,7,mid+4);ctx.shadowBlur=0;}}
 for(let i=1;i<g.wp.length;i+=2){const p0=g.wp[i-1],p1=g.wp[i],x0=bitSX+(p0.x-g.sx),x1=bitSX+(p1.x-g.sx);if(x1<-5||x0>xsW+5)continue;const dlsV=p1.dls||0;
 const dlsC2=dlsV>10?"#8a5030":dlsV>5?"#8a7030":"#4a6a8e";
@@ -319,13 +339,24 @@ const rgl2=g.gl.slice(-Math.floor(xsH/2));if(rgl2.length>1){ctx.strokeStyle="#00
 
 // HUD
 const hudH=Math.round(22*S),hudY=xsY+xsH-hudH;ctx.fillStyle="rgba(0,0,0,0.82)";ctx.fillRect(0,hudY,xsW,hudH);ctx.font=`bold ${Math.round(11*S)}px 'Courier New',monospace`;
-ctx.fillStyle="#00dd44";ctx.fillText(`${g.ft.toFixed(0)}'`,5,hudY+hudH*0.65);ctx.fillStyle="#ddaa00";ctx.fillText(`MW:${g.mw.toFixed(1)}`,xsW*0.11,hudY+hudH*0.65);ctx.fillStyle="#aaa";ctx.fillText(`ROP:${g.rop.toFixed(0)}`,xsW*0.24,hudY+hudH*0.65);ctx.fillStyle="#ff3333";ctx.fillText(`GAS:${g.gas.toFixed(0)}`,xsW*0.37,hudY+hudH*0.65);
-const oozF=g.oozFt/g.oozMax;if(oozF>0.05){ctx.fillStyle=oozF>0.6?"#ff2222":"#ff8844";ctx.fillText(`OOZ:${g.oozFt.toFixed(0)}'`,xsW*0.50,hudY+hudH*0.65);}else{const zp2=g.totFt>0?(g.inZ/g.totFt*100):0;ctx.fillStyle=zp2>70?"#00dd44":"#ddaa00";ctx.fillText(`ZN:${zp2.toFixed(0)}%`,xsW*0.50,hudY+hudH*0.65);}
-ctx.fillStyle=g.slideOverheat?"#ff2222":(g.slide?"#ffaa00":"#555");ctx.fillText(g.slideOverheat?"OVRHEAT":(g.slide?"SLIDE":"ROTATE"),xsW*0.62,hudY+hudH*0.65);
+ctx.fillStyle="#00dd44";ctx.fillText(`${g.ft.toFixed(0)}'`,5,hudY+hudH*0.65);
+// MW window — always visible. Compute effective PP/Frac for current formation
+const si3=clamp(Math.floor(g.sx/SEG_W),0,g.terr.length-2);
+const hCr2=g.ft*0.0001;const hD2=diff(g.ft);
+const hPP2=Math.min(12.5+g.ft*0.00015,15.5);
+const hBF=hPP2+0.5;
+const hTF2=g.thiefActive&&!g.lcmActive?Math.max(hPP2-0.5,10.0):hBF;
+const hLo=Math.min(hPP2,hTF2),hHi=Math.max(hPP2,hTF2);
+const mwOK=g.mw>=hLo&&g.mw<=hHi;
+ctx.fillStyle=mwOK?"#00dd44":"#ff4444";ctx.fillText(`MW:${g.mw.toFixed(1)}`,xsW*0.10,hudY+hudH*0.65);
+ctx.fillStyle=hTF2<hPP2?"#ff4444":g.thiefActive?"#ff8844":"#44aaff";ctx.fillText(`[${hLo.toFixed(1)}-${hHi.toFixed(1)}]`,xsW*0.22,hudY+hudH*0.65);
+ctx.fillStyle="#aaa";ctx.fillText(`ROP:${g.rop.toFixed(0)}`,xsW*0.37,hudY+hudH*0.65);ctx.fillStyle="#ff3333";ctx.fillText(`GAS:${g.gas.toFixed(0)}`,xsW*0.48,hudY+hudH*0.65);
+const oozF=g.oozFt/g.oozMax;if(oozF>0.05){ctx.fillStyle=oozF>0.6?"#ff2222":"#ff8844";ctx.fillText(`OOZ:${g.oozFt.toFixed(0)}'`,xsW*0.58,hudY+hudH*0.65);}else{const zp2=g.totFt>0?(g.inZ/g.totFt*100):0;ctx.fillStyle=zp2>70?"#00dd44":"#ddaa00";ctx.fillText(`ZN:${zp2.toFixed(0)}%`,xsW*0.58,hudY+hudH*0.65);}
+ctx.fillStyle=g.slideOverheat?"#ff2222":(g.slide?"#ffaa00":"#555");ctx.fillText(g.slideOverheat?"OVRHEAT":(g.slide?"SLIDE":"ROTATE"),xsW*0.70,hudY+hudH*0.65);
 ctx.fillStyle=g.costPerFt<100?"#00ff44":g.costPerFt<130?"#ddcc00":"#ff4444";ctx.font=`bold ${Math.round(12*S)}px 'Courier New',monospace`;ctx.textAlign="right";ctx.fillText(`$${g.costPerFt.toFixed(0)}/ft`,xsW-5,hudY+hudH*0.65);ctx.textAlign="left";
 
 // FOOTER
-const ftY=xsY+xsH;ctx.fillStyle="#0a0a0a";ctx.fillRect(0,ftY,W,footH);ctx.font=`bold ${Math.round(10*S)}px 'Courier New',monospace`;ctx.fillStyle=(g.pit>530||g.pit<470||g.leaseW||g.oozFt>250||g.slideOverheat||g.thiefActive)?"#ff8888":"#aaa";ctx.fillText("TEAM: "+g.cmt,5,ftY+footH*0.62);
+const ftY=xsY+xsH;ctx.fillStyle="#0a0a0a";ctx.fillRect(0,ftY,W,footH);ctx.font=`bold ${Math.round(10*S)}px 'Courier New',monospace`;ctx.fillStyle=(g.pit>550||g.pit<450||g.leaseW||g.oozFt>250||g.slideOverheat||g.thiefActive)?"#ff8888":"#aaa";ctx.fillText("TEAM: "+g.cmt,5,ftY+footH*0.62);
 
 // CONTROLS
 if(g.ph==="playing"){
@@ -335,7 +366,7 @@ function rrC(cx,cy2,w,h,r){ctx.beginPath();const x=cx-w/2,y=cy2-h/2;ctx.moveTo(x
 function dB(cx,cy2,label,act){ctx.fillStyle=act?"#00ff4118":"#080808";ctx.strokeStyle=act?"#00dd44":"#00ff4120";ctx.lineWidth=2;rrC(cx,cy2,db,db,5);ctx.fill();ctx.stroke();ctx.fillStyle=act?"#00dd44":"#008822";ctx.font=`bold ${Math.max(13,db*0.40)}px 'Courier New',monospace`;ctx.textAlign="center";ctx.fillText(label,cx,cy2+db*0.15);}
 dB(dX,dY2-db,"▲",inp.u);dB(dX,dY2+db,"▼",inp.d);dB(dX-db,dY2,"◀",inp.l);dB(dX+db,dY2,"▶",inp.r);ctx.fillStyle="#080808";rrC(dX,dY2,db*0.5,db*0.5,3);ctx.fill();
 const tankAreaX=dX+dSz/2+Math.round(10*S),tankAreaW=Math.round(50*S),tankH3=ctrlH-20;
-drawTank(tankAreaX,cYc+6,tankAreaW,tankH3-12,g.pit,g.pit>535||g.pit<465);
+drawTank(tankAreaX,cYc+6,tankAreaW,tankH3-12,g.pit,g.pit>550||g.pit<450);
 ctx.fillStyle="#222";ctx.fillRect(tankAreaX,cYc+tankH3,tankAreaW,6);ctx.fillStyle=g.slideHeat>70?"#ff4444":g.slideHeat>40?"#ddaa00":"#228844";ctx.fillRect(tankAreaX,cYc+tankH3,tankAreaW*(g.slideHeat/100),6);
 ctx.font=`${Math.round(7*S)}px 'Courier New',monospace`;ctx.fillStyle="#888";ctx.textAlign="center";ctx.fillText("SLIDE",tankAreaX+tankAreaW/2,cYc+tankH3+Math.round(14*S));ctx.textAlign="left";
 const btnStartX=tankAreaX+tankAreaW+Math.round(12*S),btnArea=W-btnStartX-5,gap=Math.round(6*S),cols=4,bW=(btnArea-gap*(cols+1))/cols,bH=Math.min(ctrlH*0.46,Math.round(55*S)),bY0=cYc+(ctrlH-bH)/2;
@@ -349,13 +380,14 @@ if(g.ph==="dead"){ctx.fillStyle="rgba(0,0,0,0.90)";ctx.fillRect(0,0,W,H);ctx.tex
 ctx.shadowColor="#ff2222";ctx.shadowBlur=20;ctx.font=`bold ${Math.round(30*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff2222";ctx.fillText("WELL LOST",W/2,H*0.10);ctx.shadowBlur=0;
 ctx.font=`bold ${Math.round(14*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff8844";ctx.fillText(g.deathReason,W/2,H*0.16);
 const zpF=g.totFt>0?(g.inZ/g.totFt*100):0;const slideP=g.totalFr>0?Math.round(g.slideFr/g.totalFr*100):0;
+const finalScore=g.costPerFt>0?Math.round(g.ft*92/g.costPerFt):0;
+ctx.fillStyle="#00ffcc";ctx.font=`bold ${Math.round(32*S)}px 'Courier New',monospace`;ctx.fillText(`SCORE: ${finalScore.toLocaleString()}`,W/2,H*0.24);
 ctx.fillStyle=g.costPerFt<100?"#00ff44":g.costPerFt<130?"#ddcc00":"#ff4444";
-ctx.font=`bold ${Math.round(28*S)}px 'Courier New',monospace`;ctx.fillText(`$${g.costPerFt.toFixed(0)}/ft`,W/2,H*0.24);
-ctx.font=`${Math.round(11*S)}px 'Courier New',monospace`;ctx.fillStyle="#888";ctx.fillText(`($92/ft is a good well)`,W/2,H*0.29);
+ctx.font=`bold ${Math.round(18*S)}px 'Courier New',monospace`;ctx.fillText(`${g.ft.toFixed(0)}'  @  $${g.costPerFt.toFixed(0)}/ft`,W/2,H*0.30);
+ctx.font=`${Math.round(11*S)}px 'Courier New',monospace`;ctx.fillStyle="#888";ctx.fillText(`(15,000 = legendary)`,W/2,H*0.34);
 ctx.font=`${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle="#ddd";
-ctx.fillText(`${g.ft.toFixed(0)}'  |  Zone:${zpF.toFixed(1)}%  |  Total: $${(g.costTotal/1000).toFixed(0)}K`,W/2,H*0.34);
-ctx.fillStyle="#888";ctx.fillText(`DLS avg:${g.avgDls.toFixed(1)}° max:${g.maxDls.toFixed(1)}°  |  Slide:${slideP}%`,W/2,H*0.39);
-ctx.fillText(`Mud:${g.mudOnLoc.toFixed(0)}bbl  |  LCM:${5-g.lcm} used  |  Diff:${diff(g.ft).toFixed(1)}x`,W/2,H*0.44);
+ctx.fillText(`Zone:${zpF.toFixed(1)}%  |  Total: $${(g.costTotal/1000).toFixed(0)}K  |  Slide:${slideP}%`,W/2,H*0.39);
+ctx.fillStyle="#888";ctx.fillText(`Mud:${g.mudOnLoc.toFixed(0)}bbl  |  LCM:${5-g.lcm} used  |  Diff:${diff(g.ft).toFixed(1)}x`,W/2,H*0.44);
 drawBit(W/2,H*0.52,false);
 if(g.fr%28<14){ctx.font=`bold ${Math.round(18*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("TAP TO DRILL AGAIN",W/2,H*0.64);}ctx.textAlign="left";}
 
