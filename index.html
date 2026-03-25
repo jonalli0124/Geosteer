@@ -11,16 +11,85 @@
 <script>
 const cv=document.getElementById("cv"),ctx=cv.getContext("2d");
 const SEG_W=22,SCROLL_BASE=0.7,LEASE_HALF=180;
-const FM=[
-{n:"OLMOS",th:12,gr:75,pp:11.2,frac:14.5,t:"#3a4a2a",m:"#324222",b:"#2a3a1a",lbl:"OLMOS",lc:"#5a6a3a"},
-{n:"1ST SAN MIGUEL",th:10,gr:55,pp:11.8,frac:13.8,t:"#4a4030",m:"#403828",b:"#383020",lbl:"1ST SM",lc:"#6a5a40"},
-{n:"2ND SAN MIGUEL",th:8,gr:35,pp:12.5,frac:13.2,t:"#0a4a1a",m:"#084010",b:"#063808",lbl:"2ND SM",lc:"#00ff44",tgt:true},
-{n:"UPSON CLAY",th:10,gr:120,pp:12.8,frac:13.0,t:"#1e1e1e",m:"#181818",b:"#121212",lbl:"UPSON",lc:"#444"},
-{n:"ANACACHO",th:12,gr:25,pp:10.5,frac:15.0,t:"#6a6050",m:"#5e5444",b:"#524838",lbl:"ANACACHO",lc:"#8a7a60"},
-{n:"AUSTIN CHALK",th:14,gr:20,pp:10.0,frac:14.5,t:"#1a3a6a",m:"#143060",b:"#0e2450",lbl:"A.CHALK",lc:"#2a5a9a"},
-{n:"EAGLE FORD",th:10,gr:140,pp:11.8,frac:13.5,t:"#141414",m:"#0e0e0e",b:"#080808",lbl:"EGL FRD",lc:"#333"},
-];
-const FMT=FM.reduce((a,f)=>a+f.th,0),TGT_FRAC=(12+10+4)/FMT;
+
+// RESERVOIR CONFIGURATIONS
+const RESERVOIRS={
+sanmiguel:{
+  name:"2ND SAN MIGUEL",desc:"MAVERICK BASIN — BALANCED",diff:"★★★☆☆",
+  color:"#00ff44",
+  startMW:12.8,ppStart:12.5,ppRate:0.00015,ppCap:15.5,window:0.5,
+  thiefDrop:0.5,thiefBase:0.025,thiefRandom:0.0003,
+  faultRate:0.13,bwRate:0.12,walkSpd:0.060,
+  zoneShrink:0.00004,
+  fm:[
+    {n:"OLMOS",th:12,gr:75,t:"#3a4a2a",m:"#324222",b:"#2a3a1a",lbl:"OLMOS",lc:"#5a6a3a"},
+    {n:"1ST SAN MIGUEL",th:10,gr:55,t:"#4a4030",m:"#403828",b:"#383020",lbl:"1ST SM",lc:"#6a5a40"},
+    {n:"2ND SAN MIGUEL",th:8,gr:35,t:"#0a4a1a",m:"#084010",b:"#063808",lbl:"2ND SM",lc:"#00ff44",tgt:true},
+    {n:"UPSON CLAY",th:10,gr:120,t:"#1e1e1e",m:"#181818",b:"#121212",lbl:"UPSON",lc:"#444"},
+    {n:"ANACACHO",th:12,gr:25,t:"#6a6050",m:"#5e5444",b:"#524838",lbl:"ANACACHO",lc:"#8a7a60"},
+    {n:"AUSTIN CHALK",th:14,gr:20,t:"#1a3a6a",m:"#143060",b:"#0e2450",lbl:"A.CHALK",lc:"#2a5a9a"},
+    {n:"EAGLE FORD",th:10,gr:140,t:"#141414",m:"#0e0e0e",b:"#080808",lbl:"EGL FRD",lc:"#333"},
+  ],tgtAbove:22,tgtCenter:26},
+olmos:{
+  name:"OLMOS",desc:"MAVERICK BASIN — SHALLOW & FAULTED",diff:"★★☆☆☆",
+  color:"#ddaa00",
+  startMW:10.2,ppStart:9.8,ppRate:0.00012,ppCap:13.0,window:0.5,
+  thiefDrop:0.5,thiefBase:0.04,thiefRandom:0.0005,
+  faultRate:0.22,bwRate:0.10,walkSpd:0.050,
+  zoneShrink:0.00003,
+  fm:[
+    {n:"ESCONDIDO",th:12,gr:65,t:"#3a3a2a",m:"#323222",b:"#2a2a1a",lbl:"ESCOND",lc:"#5a5a3a"},
+    {n:"OLMOS COAL",th:6,gr:40,t:"#1a1a0a",m:"#141408",b:"#0e0e04",lbl:"COAL",lc:"#333"},
+    {n:"OLMOS",th:10,gr:50,t:"#4a5a2a",m:"#3e4e20",b:"#324218",lbl:"OLMOS",lc:"#ddaa00",tgt:true},
+    {n:"1ST SAN MIGUEL",th:10,gr:55,t:"#4a4030",m:"#403828",b:"#383020",lbl:"1ST SM",lc:"#6a5a40"},
+    {n:"2ND SAN MIGUEL",th:8,gr:35,t:"#0a4a1a",m:"#084010",b:"#063808",lbl:"2ND SM",lc:"#1a5a2a"},
+    {n:"UPSON CLAY",th:10,gr:120,t:"#1e1e1e",m:"#181818",b:"#121212",lbl:"UPSON",lc:"#444"},
+    {n:"ANACACHO",th:12,gr:25,t:"#6a6050",m:"#5e5444",b:"#524838",lbl:"ANACACHO",lc:"#8a7a60"},
+  ],tgtAbove:18,tgtCenter:23},
+eagleford:{
+  name:"EAGLE FORD",desc:"SOUTH TEXAS — HIGH PRESSURE",diff:"★★★★☆",
+  color:"#4488ff",
+  startMW:14.5,ppStart:14.2,ppRate:0.00010,ppCap:16.5,window:0.4,
+  thiefDrop:0.4,thiefBase:0.015,thiefRandom:0.0002,
+  faultRate:0.08,bwRate:0.14,walkSpd:0.055,
+  zoneShrink:0.00005,
+  fm:[
+    {n:"AUSTIN CHALK",th:14,gr:20,t:"#1a3a6a",m:"#143060",b:"#0e2450",lbl:"A.CHALK",lc:"#2a5a9a"},
+    {n:"UPPER EF",th:8,gr:110,t:"#1a1a1a",m:"#141414",b:"#0e0e0e",lbl:"UPR EF",lc:"#444"},
+    {n:"LOWER EF",th:6,gr:150,t:"#0a0a0a",m:"#080808",b:"#050505",lbl:"LWR EF",lc:"#4488ff",tgt:true},
+    {n:"BUDA LIME",th:10,gr:18,t:"#6a5a3a",m:"#5e4e30",b:"#524228",lbl:"BUDA",lc:"#8a7a5a"},
+    {n:"DEL RIO",th:10,gr:90,t:"#2a2a2a",m:"#222222",b:"#1a1a1a",lbl:"DEL RIO",lc:"#555"},
+    {n:"GEORGETOWN",th:12,gr:30,t:"#3a3228",m:"#322a22",b:"#2a221a",lbl:"GTOWN",lc:"#5a5040"},
+    {n:"EDWARDS",th:14,gr:15,t:"#8a7a60",m:"#7a6a50",b:"#6a5a40",lbl:"EDWARDS",lc:"#aa9a70"},
+  ],tgtAbove:22,tgtCenter:25},
+austinchalk:{
+  name:"AUSTIN CHALK",desc:"SOUTH TEXAS — FRACTURED NIGHTMARE",diff:"★★★★★",
+  color:"#aa66ff",
+  startMW:12.0,ppStart:11.5,ppRate:0.00013,ppCap:15.0,window:0.5,
+  thiefDrop:0.8,thiefBase:0.05,thiefRandom:0.0008,
+  faultRate:0.10,bwRate:0.15,walkSpd:0.065,
+  zoneShrink:0.00006,
+  fm:[
+    {n:"TAYLOR MARL",th:14,gr:80,t:"#2a2a22",m:"#22221a",b:"#1a1a14",lbl:"TAYLOR",lc:"#4a4a3a"},
+    {n:"UPPER CHALK",th:10,gr:25,t:"#2a4a7a",m:"#1e3e6a",b:"#14305a",lbl:"UPR CK",lc:"#3a6a9a"},
+    {n:"AUSTIN CHALK",th:7,gr:18,t:"#1a3a6a",m:"#143060",b:"#0e2450",lbl:"A.CHALK",lc:"#aa66ff",tgt:true},
+    {n:"LOWER CHALK",th:10,gr:28,t:"#1a3060",m:"#142a54",b:"#0e2048",lbl:"LWR CK",lc:"#2a5a8a"},
+    {n:"EAGLE FORD",th:10,gr:140,t:"#141414",m:"#0e0e0e",b:"#080808",lbl:"EGL FRD",lc:"#333"},
+    {n:"BUDA LIME",th:10,gr:18,t:"#6a5a3a",m:"#5e4e30",b:"#524228",lbl:"BUDA",lc:"#8a7a5a"},
+    {n:"DEL RIO",th:10,gr:90,t:"#2a2a2a",m:"#222222",b:"#1a1a1a",lbl:"DEL RIO",lc:"#555"},
+  ],tgtAbove:24,tgtCenter:27.5},
+};
+
+// Active reservoir config
+let RES=RESERVOIRS.sanmiguel;
+let FM=RES.fm;
+let FMT=FM.reduce((a,f)=>a+f.th,0),TGT_FRAC=RES.tgtCenter/FMT;
+
+function setReservoir(key){
+  RES=RESERVOIRS[key];FM=RES.fm;
+  FMT=FM.reduce((a,f)=>a+f.th,0);TGT_FRAC=RES.tgtCenter/FMT;
+}
+
 const BIT=[[0,0,0,0,4,5,5,4,0,0,0,0,0,0],[0,0,0,4,2,3,3,2,4,0,0,0,6,0],[0,0,4,1,2,3,7,3,2,5,0,0,0,6],[0,4,1,2,3,3,7,3,3,2,5,5,6,0],[4,1,2,2,3,3,7,3,3,2,2,5,5,6],[4,1,2,2,3,3,7,3,3,2,2,5,5,6],[0,4,1,2,3,3,7,3,3,2,5,5,0,6],[0,0,4,1,2,3,7,3,2,5,0,6,0,0],[0,0,0,4,2,3,3,2,4,0,0,0,0,6],[0,0,0,0,4,5,5,4,0,0,0,6,0,0]];
 const BC={0:"",1:"#8a6a20",2:"#b89030",3:"#d8b040",4:"#4a5060",5:"#7a8898",6:"#a08060",7:"#f0d860"};
 const BCK={0:"",1:"#6a2020",2:"#983030",3:"#c04040",4:"#3a2028",5:"#6a3848",6:"#a06060",7:"#e06060"};
@@ -36,20 +105,20 @@ const BIT_FW=70,BIT_FH=28,BIT_FRAMES=4;
 // Rig sprite for VS panel
 const rigImg=new Image();rigImg.src="data:image/png;base64,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";
 let rigReady=false;rigImg.onload=()=>{rigReady=true;};
-function genTerrain(){const s=[];let base=0,fCD=0,dip=0;for(let i=0;i<5000;i++){dip+=(Math.random()-0.48)*0.5;dip=clamp(dip,-1.5,1.5);base+=dip;base=clamp(base,-55,55);let fault=false,fTh=0;fCD--;if(i>3&&fCD<=0&&Math.random()<0.13){const mx=40+(i/5000)*260;fTh=(Math.random()>0.5?1:-1)*(25+Math.random()*mx);base+=clamp(fTh*0.4,-45,45);base=clamp(base,-70,70);fault=true;fCD=1+Math.floor(Math.random()*4);}let thief=false;if(!fault&&Math.random()<0.025)thief=true;s.push({base,fault,fTh:Math.abs(fTh),gas:!fault&&Math.random()<0.04,thief});}for(let i=0;i<s.length;i++){if(s[i].thief){const span=3+Math.floor(Math.random()*6);for(let j=1;j<=span&&i+j<s.length;j++)s[i+j].thief=true;i+=span;}}return s;}
-function getBounds(cY,off,h,ft){const tgtShrink=ft?Math.max(0.3,1.0-ft*0.00004):1.0;const sc=h*0.95,bs=[];let a=0;for(let i=0;i<FM.length;i++){const th=FM[i].tgt?FM[i].th*tgtShrink:FM[i].th;const top=cY+off-sc/2+(a/FMT)*sc;a+=th;bs.push({fm:FM[i],top,bot:cY+off-sc/2+(a/FMT)*sc});}return bs;}
+function genTerrain(){const s=[];let base=0,fCD=0,dip=0;for(let i=0;i<5000;i++){dip+=(Math.random()-0.48)*0.5;dip=clamp(dip,-1.5,1.5);base+=dip;base=clamp(base,-55,55);let fault=false,fTh=0;fCD--;if(i>3&&fCD<=0&&Math.random()<RES.faultRate){const mx=40+(i/5000)*260;fTh=(Math.random()>0.5?1:-1)*(25+Math.random()*mx);base+=clamp(fTh*0.4,-45,45);base=clamp(base,-70,70);fault=true;fCD=1+Math.floor(Math.random()*4);}let thief=false;if(!fault&&Math.random()<RES.thiefBase)thief=true;s.push({base,fault,fTh:Math.abs(fTh),gas:!fault&&Math.random()<0.04,thief});}for(let i=0;i<s.length;i++){if(s[i].thief){const span=3+Math.floor(Math.random()*6);for(let j=1;j<=span&&i+j<s.length;j++)s[i+j].thief=true;i+=span;}}return s;}
+function getBounds(cY,off,h,ft){const tgtShrink=ft?Math.max(0.3,1.0-ft*RES.zoneShrink):1.0;const sc=h*0.95,bs=[];let a=0;for(let i=0;i<FM.length;i++){const th=FM[i].tgt?FM[i].th*tgtShrink:FM[i].th;const top=cY+off-sc/2+(a/FMT)*sc;a+=th;bs.push({fm:FM[i],top,bot:cY+off-sc/2+(a/FMT)*sc});}return bs;}
 
 let g,inp={u:0,d:0,l:0,r:0,mU:0,mD:0,sld:0,lcm:0};
 function init(){return{ph:"title",terr:genTerrain(),by:0,vy:0,sx:0,spd:SCROLL_BASE,
-ft:0,inZ:0,totFt:0,mw:12.8,rop:60,slide:false,
+ft:0,inZ:0,totFt:0,mw:RES.startMW,rop:60,slide:false,
 gas:0,gasHist:[],peakGas:0,pit:500,mudOnLoc:300,lcm:5,lcmActive:false,lcmTimer:0,
 kick:false,kickSev:0,loss:false,lossSev:0,oozFt:0,oozMax:1000,
-azi:0,bwRate:0.12,leaseW:false,
+azi:0,bwRate:RES.bwRate,leaseW:false,
 inc:90,prevInc:90,dls:0,dlsHist:[],maxDls:0,avgDls:0,dlsSum:0,dlsCt:0,lastDlsFt:0,
 // Cost tracking — $/ft model
 costTotal:0,costPerFt:0,
 gl:[],mwdB:[],wp:[],notifs:[],nid:0,fr:0,
-fm:"2ND SAN MIGUEL",fFl:0,surv:[],lastSv:0,_br:null,drift:0,parts:[],
+fm:RES.name,fFl:0,surv:[],lastSv:0,_br:null,drift:0,parts:[],
 cmt:"Standing by...",deathReason:"",
 thiefActive:false,thiefTimer:0,
 ppCreep:0, // pore pressure increases over time, forcing MW up
@@ -132,7 +201,7 @@ if(g.lcmActive){g.lcmTimer--;if(g.lcmTimer<=0)g.lcmActive=false;}
 const walkRate=g.bwRate*(1+g.ft/5000);
 if(!g.slide){
   // Rotary: bit walks RIGHT (positive azi) — gets worse with footage
-  g.azi+=walkRate*g.spd*0.060*(1+Math.sin(g.fr*0.003)*0.3);
+  g.azi+=walkRate*g.spd*RES.walkSpd*(1+Math.sin(g.fr*0.003)*0.3);
 }else{
   // Slide: always walks LEFT — toolface set left to correct the right walk
   const correctionRate=walkRate*g.spd*0.025;
@@ -212,7 +281,7 @@ const s1=g.terr[si];if(s1.fault&&g.fFl===0){g.fFl=35;addN(`FAULT ${s1.fTh.toFixe
 // Thief zones — lower the local frac gradient, so high MW = losses
 // Thief zone detection
 // Thief zones — terrain-based + random chance that increases with footage
-const thiefChance=0.0003*(1+g.ft/5000); // gets more frequent deeper
+const thiefChance=RES.thiefRandom*(1+g.ft/5000); // gets more frequent deeper
 const randomThief=!s1.thief&&!g.thiefActive&&!g.lcmActive&&Math.random()<thiefChance;
 if(randomThief){// Mark terrain ahead so overlay shows
   const span=3+Math.floor(Math.random()*5);
@@ -224,10 +293,10 @@ if(g.thiefActive){g.thiefTimer--;if(g.thiefTimer<=0)g.thiefActive=false;}if(!thi
 
 // MW WINDOW — always 0.5 ppg wide, PP creeps with footage
 // PP: 12.5 at 0' → 14.0 at 15K' → caps at 14.5
-const effPP=Math.min(12.5+g.ft*0.00015,15.5);
-const baseFrac=effPP+0.5; // always 0.5 above PP
+const effPP=Math.min(RES.ppStart+g.ft*RES.ppRate,RES.ppCap);
+const baseFrac=effPP+RES.window;
 // Thief zones drop frac by 1.5 ppg, but floor at 10.0
-const effFrac=g.thiefActive&&!g.lcmActive?Math.max(effPP-0.5,10.0):baseFrac;
+const effFrac=g.thiefActive&&!g.lcmActive?Math.max(effPP-RES.thiefDrop,10.0):baseFrac;
 
 // KICKS — MW below PP and NOT in thief zone. Low MW in thief zone is intentional.
 if(!g.thiefActive&&g.mw<effPP&&!g.kick&&Math.random()<0.01*d){g.kick=true;g.kickSev=(effPP-g.mw+0.3)*0.4*d;}
@@ -269,25 +338,43 @@ ctx.clearRect(0,0,W,H);
 // TITLE
 if(g.ph==="title"){
 ctx.fillStyle="#000";ctx.fillRect(0,0,W,H);
-const py=H*0.10,ph=H*0.22;let acc=0;
-for(let i=0;i<FM.length;i++){const fy=py+(acc/FMT)*ph;acc+=FM[i].th;const fh=(FM[i].th/FMT)*ph;const gr=ctx.createLinearGradient(0,fy,0,fy+fh);gr.addColorStop(0,FM[i].t);gr.addColorStop(1,FM[i].b);ctx.fillStyle=gr;ctx.fillRect(W*0.05,fy,W*0.9,fh);if(FM[i].tgt){ctx.strokeStyle="#00ff4466";ctx.lineWidth=2;ctx.strokeRect(W*0.05,fy,W*0.9,fh);}if(fh>7){ctx.font=`${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle=FM[i].tgt?"#00ff44":"#999";ctx.fillText(FM[i].n+(FM[i].tgt?" ◄ TARGET":""),W*0.07,fy+fh/2+4);}}
-const by=py+(22+4)/76*ph;drawBit(W*0.62,by,false);
-ctx.textAlign="center";ctx.shadowColor="#00ff44";ctx.shadowBlur=20;ctx.font=`bold ${Math.round(34*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("GEOSTEER",W/2,H*0.06);ctx.shadowBlur=0;
-ctx.font=`${Math.round(13*S)}px 'Courier New',monospace`;ctx.fillStyle="#ee8800";ctx.fillText("SURVIVAL HORIZONTAL DRILLING SIMULATOR",W/2,H*0.09);
-ctx.font=`bold ${Math.round(11*S)}px 'Courier New',monospace`;
+if(g._selRes===undefined)g._selRes=1; // default to 2nd San Miguel (index 1)
+const resOrder=["olmos","sanmiguel","austinchalk","eagleford"];
+const selKey=resOrder[g._selRes];const selR=RESERVOIRS[selKey];
+
+// Formation column preview for selected reservoir
+const py=H*0.11,ph=H*0.20;let acc=0;const fmTot=selR.fm.reduce((a,f)=>a+f.th,0);
+for(let i=0;i<selR.fm.length;i++){const fy=py+(acc/fmTot)*ph;acc+=selR.fm[i].th;const fh=(selR.fm[i].th/fmTot)*ph;const gr=ctx.createLinearGradient(0,fy,0,fy+fh);gr.addColorStop(0,selR.fm[i].t);gr.addColorStop(1,selR.fm[i].b);ctx.fillStyle=gr;ctx.fillRect(W*0.05,fy,W*0.9,fh);if(selR.fm[i].tgt){ctx.strokeStyle=selR.color+"66";ctx.lineWidth=2;ctx.strokeRect(W*0.05,fy,W*0.9,fh);}if(fh>7){ctx.font=`${Math.round(11*S)}px 'Courier New',monospace`;ctx.fillStyle=selR.fm[i].tgt?selR.color:"#999";ctx.fillText(selR.fm[i].n+(selR.fm[i].tgt?" ◄ TARGET":""),W*0.07,fy+fh/2+4);}}
+// Bit in target zone
+const tgtFm=selR.fm.find(f=>f.tgt);let tgtAcc=0;for(const f of selR.fm){if(f.tgt)break;tgtAcc+=f.th;}
+const bitY=py+((tgtAcc+tgtFm.th/2)/fmTot)*ph;drawBit(W*0.62,bitY,false);
+
+// Title
+ctx.textAlign="center";ctx.shadowColor="#00ff44";ctx.shadowBlur=20;ctx.font=`bold ${Math.round(32*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("GEOSTEER",W/2,H*0.06);ctx.shadowBlur=0;
+ctx.font=`${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle="#ee8800";ctx.fillText("SURVIVAL HORIZONTAL DRILLING SIMULATOR",W/2,H*0.09);
+
+// Reservoir selector
+const selY=H*0.34;
+ctx.font=`bold ${Math.round(10*S)}px 'Courier New',monospace`;ctx.fillStyle="#888";ctx.fillText("▲▼ SELECT RESERVOIR",W/2,selY-Math.round(14*S));
+for(let i=0;i<resOrder.length;i++){
+  const r=RESERVOIRS[resOrder[i]];const isSel=i===g._selRes;const ly=selY+i*Math.round(20*S);
+  ctx.font=`bold ${Math.round(isSel?13:10)*S}px 'Courier New',monospace`;
+  ctx.fillStyle=isSel?r.color:"#555";
+  const arrow=isSel?"► ":"  ";
+  ctx.fillText(`${arrow}${r.name} — ${r.desc}  ${r.diff}`,W/2,ly);
+}
+
+// Instructions
+ctx.font=`bold ${Math.round(10*S)}px 'Courier New',monospace`;const instY=H*0.56;
 [{t:"DRILL THE LONGEST WELL AT THE LOWEST COST",c:"#00ffcc"},{t:"",c:""},
-{t:"▲▼ STEER TO STAY IN THE GREEN TARGET ZONE",c:"#00dd44"},
-{t:"◀▶ CONTROL SPEED — FASTER = CHEAPER PER FOOT",c:"#00dd44"},
-{t:"[3] SLIDE TO CORRECT BIT WALK & STAY IN LEASE",c:"#ddaa00"},{t:"",c:""},
-{t:"WATCH THE MW WINDOW [12.5-13.0] IN THE HUD",c:"#44aaff"},
-{t:"[1] WEIGHT UP  [2] CUT WEIGHT — STAY IN RANGE",c:"#44aaff"},
-{t:"ORANGE ZONES AHEAD = THIEF ZONES — CUT WEIGHT EARLY",c:"#ff8844"},
-{t:"AFTER THIEF ZONES, WEIGHT BACK UP TO AVOID KICKS",c:"#ddcc00"},
+{t:"▲▼ STEER  ◀▶ SPEED  [3] SLIDE  [4] LCM",c:"#00dd44"},
+{t:"[1] WEIGHT UP  [2] CUT WEIGHT",c:"#ddaa00"},{t:"",c:""},
+{t:"STAY IN THE MW WINDOW ["+selR.ppStart.toFixed(1)+"-"+(selR.ppStart+selR.window).toFixed(1)+"]",c:"#44aaff"},
+{t:"THIEF ZONES LOWER THE WINDOW — CUT WEIGHT EARLY",c:"#ff8844"},
 {t:"WEIGHTING UP USES MUD ON SURFACE — IT'S FINITE!",c:"#ff4444"},
-{t:"[4] LCM TO BLOCK THIEF ZONES (5 TREATMENTS)",c:"#44aaff"},
 {t:"THE DEEPER YOU GO, THE HARDER EVERYTHING GETS",c:"#ee8800"},
-].forEach((l,i)=>{ctx.fillStyle=l.c;ctx.fillText(l.t,W/2,H*0.36+i*Math.round(16*S));});
-if(g.fr%28<14){ctx.font=`bold ${Math.round(20*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("TAP / SPACE TO DRILL",W/2,H*0.93);}
+].forEach((l,i)=>{ctx.fillStyle=l.c;ctx.fillText(l.t,W/2,instY+i*Math.round(14*S));});
+if(g.fr%28<14){ctx.font=`bold ${Math.round(18*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("SPACE / TAP TO DRILL",W/2,H*0.93);}
 ctx.textAlign="left";requestAnimationFrame(tick);return;}
 
 const fmO=(TGT_FRAC-0.5)*xsH*0.95;
@@ -356,9 +443,9 @@ ctx.fillStyle="#00dd44";ctx.fillText(`${g.ft.toFixed(0)}'`,4,hudY+hudH*0.65);
 // MW window — always visible. Compute effective PP/Frac for current formation
 const si3=clamp(Math.floor(g.sx/SEG_W),0,g.terr.length-2);
 const hCr2=g.ft*0.0001;const hD2=diff(g.ft);
-const hPP2=Math.min(12.5+g.ft*0.00015,15.5);
-const hBF=hPP2+0.5;
-const hTF2=g.thiefActive&&!g.lcmActive?Math.max(hPP2-0.5,10.0):hBF;
+const hPP2=Math.min(RES.ppStart+g.ft*RES.ppRate,RES.ppCap);
+const hBF=hPP2+RES.window;
+const hTF2=g.thiefActive&&!g.lcmActive?Math.max(hPP2-RES.thiefDrop,10.0):hBF;
 const hLo=Math.min(hPP2,hTF2),hHi=Math.max(hPP2,hTF2);
 const mwOK=g.mw>=hLo&&g.mw<=hHi;
 ctx.fillStyle=mwOK?"#00dd44":"#ff4444";ctx.fillText(`MW:${g.mw.toFixed(1)}`,xsW*0.10,hudY+hudH*0.65);
@@ -392,7 +479,8 @@ g._br={dX,dY:dY2,db,btns:btns.map(b=>({...b,bx:btnStartX+gap+b.col*(bW+gap),by:b
 // DEATH
 if(g.ph==="dead"){ctx.fillStyle="rgba(0,0,0,0.90)";ctx.fillRect(0,0,W,H);ctx.textAlign="center";
 ctx.shadowColor="#ff2222";ctx.shadowBlur=20;ctx.font=`bold ${Math.round(30*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff2222";ctx.fillText("WELL LOST",W/2,H*0.10);ctx.shadowBlur=0;
-ctx.font=`bold ${Math.round(14*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff8844";ctx.fillText(g.deathReason,W/2,H*0.16);
+ctx.font=`bold ${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle=RES.color;ctx.fillText(RES.name,W/2,H*0.15);
+ctx.font=`bold ${Math.round(14*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff8844";ctx.fillText(g.deathReason,W/2,H*0.19);
 const zpF=g.totFt>0?(g.inZ/g.totFt*100):0;const slideP=g.totalFr>0?Math.round(g.slideFr/g.totalFr*100):0;
 const finalScore=g.costPerFt>0?Math.round(g.ft*(92/g.costPerFt)*(zpF/100)):0;
 ctx.fillStyle="#00ffcc";ctx.font=`bold ${Math.round(32*S)}px 'Courier New',monospace`;ctx.fillText(`SCORE: ${finalScore.toLocaleString()}`,W/2,H*0.24);
@@ -403,20 +491,25 @@ ctx.font=`${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle="#ddd";
 ctx.fillText(`Zone:${zpF.toFixed(1)}%  |  Total: $${(g.costTotal/1000).toFixed(0)}K  |  Slide:${slideP}%`,W/2,H*0.39);
 ctx.fillStyle="#888";ctx.fillText(`Mud:${g.mudOnLoc.toFixed(0)}bbl  |  LCM:${5-g.lcm} used  |  Diff:${diff(g.ft).toFixed(1)}x`,W/2,H*0.44);
 drawBit(W/2,H*0.52,false);
-if(g.fr%28<14){ctx.font=`bold ${Math.round(18*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("TAP TO DRILL AGAIN",W/2,H*0.64);}ctx.textAlign="left";}
+if(g.fr%28<14){ctx.font=`bold ${Math.round(18*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("TAP / SPACE TO CONTINUE",W/2,H*0.64);}ctx.textAlign="left";}
 
 requestAnimationFrame(tick);
 }
 
 // INPUT
+const resOrder=["olmos","sanmiguel","austinchalk","eagleford"];
+function startGame(){const key=resOrder[g._selRes!=null?g._selRes:1];setReservoir(key);g=init();g._selRes=resOrder.indexOf(key);g.ph="playing";}
 function proc(tc,mv){const r=cv.getBoundingClientRect(),x=tc.clientX-r.left,y=tc.clientY-r.top,br=g._br;if(!br)return;const dx=x-br.dX,dy=y-br.dY,db=br.db;if(Math.abs(dx)<db*2.2&&Math.abs(dy)<db*2.2){if(dy<-db*0.25&&Math.abs(dx)<db*0.95)inp.u=1;if(dy>db*0.25&&Math.abs(dx)<db*0.95)inp.d=1;if(dx<-db*0.25&&Math.abs(dy)<db*0.95)inp.l=1;if(dx>db*0.25&&Math.abs(dy)<db*0.95)inp.r=1;}for(const b of br.btns){if(x>=b.bx&&x<=b.bx+b.bw&&y>=b.by&&y<=b.by+b.bh){if(b.k==="sld"&&!mv)inp.sld=inp.sld?0:1;else if(b.k==="lcm"&&!mv)inp.lcm=1;else if(b.k!=="sld"&&b.k!=="lcm")inp[b.k]=1;}}}
 function rst(){inp.u=0;inp.d=0;inp.l=0;inp.r=0;inp.mU=0;inp.mD=0;}
-cv.addEventListener("touchstart",e=>{e.preventDefault();if(g.ph==="title"){g.ph="playing";return;}if(g.ph==="dead"){g=init();g.ph="playing";return;}for(const tc of e.changedTouches)proc(tc);},{passive:false});
+cv.addEventListener("touchstart",e=>{e.preventDefault();if(g.ph==="title"){const r=cv.getBoundingClientRect();const ty=e.changedTouches[0].clientY-r.top;const h=r.height;if(ty<h*0.4){g._selRes=(((g._selRes!=null?g._selRes:1)-1+4)%4);}else if(ty>h*0.6){startGame();}else{g._selRes=(((g._selRes!=null?g._selRes:1)+1)%4);}return;}if(g.ph==="dead"){const sel=g._selRes;g=init();g._selRes=sel;return;}for(const tc of e.changedTouches)proc(tc);},{passive:false});
 cv.addEventListener("touchmove",e=>{e.preventDefault();rst();for(const tc of e.touches)proc(tc,true);},{passive:false});
 cv.addEventListener("touchend",e=>{e.preventDefault();rst();for(const tc of e.touches)proc(tc,true);},{passive:false});
-cv.addEventListener("mousedown",e=>{if(g.ph==="title"){g.ph="playing";return;}if(g.ph==="dead"){g=init();g.ph="playing";return;}proc({clientX:e.clientX,clientY:e.clientY});});
+cv.addEventListener("mousedown",e=>{if(g.ph==="title"){startGame();return;}if(g.ph==="dead"){const sel=g._selRes;g=init();g._selRes=sel;return;}proc({clientX:e.clientX,clientY:e.clientY});});
 window.addEventListener("mouseup",()=>rst());
-window.addEventListener("keydown",e=>{if(e.key===" "){e.preventDefault();if(g.ph==="title"){g.ph="playing";return;}if(g.ph==="dead"){g=init();g.ph="playing";return;}}if(e.key==="ArrowUp"||e.key==="w"){inp.u=1;e.preventDefault();}if(e.key==="ArrowDown"||e.key==="s"){inp.d=1;e.preventDefault();}if(e.key==="ArrowLeft"||e.key==="a"){inp.l=1;e.preventDefault();}if(e.key==="ArrowRight"||e.key==="d"){inp.r=1;e.preventDefault();}if(e.key==="1"||e.key==="q")inp.mU=1;if(e.key==="2"||e.key==="z")inp.mD=1;if(e.key==="3"||e.key==="f")inp.sld=inp.sld?0:1;if(e.key==="4"||e.key==="e")inp.lcm=1;});
+window.addEventListener("keydown",e=>{
+if(g.ph==="title"){if(e.key==="ArrowUp"||e.key==="w"){g._selRes=(((g._selRes!=null?g._selRes:1)-1+4)%4);e.preventDefault();}if(e.key==="ArrowDown"||e.key==="s"){g._selRes=(((g._selRes!=null?g._selRes:1)+1)%4);e.preventDefault();}if(e.key===" "||e.key==="Enter"){e.preventDefault();startGame();}return;}
+if(g.ph==="dead"){if(e.key===" "||e.key==="Enter"){e.preventDefault();const sel=g._selRes;g=init();g._selRes=sel;}return;}
+if(e.key==="ArrowUp"||e.key==="w"){inp.u=1;e.preventDefault();}if(e.key==="ArrowDown"||e.key==="s"){inp.d=1;e.preventDefault();}if(e.key==="ArrowLeft"||e.key==="a"){inp.l=1;e.preventDefault();}if(e.key==="ArrowRight"||e.key==="d"){inp.r=1;e.preventDefault();}if(e.key==="1"||e.key==="q")inp.mU=1;if(e.key==="2"||e.key==="z")inp.mD=1;if(e.key==="3"||e.key==="f")inp.sld=inp.sld?0:1;if(e.key==="4"||e.key==="e")inp.lcm=1;});
 window.addEventListener("keyup",e=>{if(e.key==="ArrowUp"||e.key==="w")inp.u=0;if(e.key==="ArrowDown"||e.key==="s")inp.d=0;if(e.key==="ArrowLeft"||e.key==="a")inp.l=0;if(e.key==="ArrowRight"||e.key==="d")inp.r=0;if(e.key==="1"||e.key==="q")inp.mU=0;if(e.key==="2"||e.key==="z")inp.mD=0;});
 requestAnimationFrame(tick);
 </script>
