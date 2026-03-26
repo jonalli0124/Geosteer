@@ -888,13 +888,13 @@ const resOrder=["olmos","sanmiguel","austinchalk","eagleford"];
 function startGame(){const key=resOrder[g._selRes!=null?g._selRes:1];setReservoir(key);g=init();g._selRes=resOrder.indexOf(key);g.ph="playing";inp={u:0,d:0,l:0,r:0,mU:0,mD:0,sld:0,lcm:0};if(bgmGain)bgmGain.gain.linearRampToValueAtTime(0.3,audioCtx?audioCtx.currentTime+0.5:0);}
 function proc(tc,mv){const r=cv.getBoundingClientRect(),x=tc.clientX-r.left,y=tc.clientY-r.top,br=g._br;if(!br)return;const dx=x-br.dX,dy=y-br.dY,db=br.db;if(Math.abs(dx)<db*2.2&&Math.abs(dy)<db*2.2){if(dy<-db*0.25&&Math.abs(dx)<db*0.95)inp.u=1;if(dy>db*0.25&&Math.abs(dx)<db*0.95)inp.d=1;if(dx<-db*0.25&&Math.abs(dy)<db*0.95)inp.l=1;if(dx>db*0.25&&Math.abs(dy)<db*0.95)inp.r=1;}for(const b of br.btns){if(x>=b.bx&&x<=b.bx+b.bw&&y>=b.by&&y<=b.by+b.bh){if(b.k==="sld"&&!mv)inp.sld=inp.sld?0:1;else if(b.k==="lcm"&&!mv)inp.lcm=1;else if(b.k!=="sld"&&b.k!=="lcm")inp[b.k]=1;}}}
 function rst(){inp.u=0;inp.d=0;inp.l=0;inp.r=0;inp.mU=0;inp.mD=0;}
-cv.addEventListener("touchstart",e=>{e.preventDefault();if(g.ph==="title"){initAudio();SFX.menuSelect();if(!BGM.playing)BGM.start();const r=cv.getBoundingClientRect();const ty=e.changedTouches[0].clientY-r.top;const h=r.height;if(ty<h*0.5){g._selRes=(((g._selRes!=null?g._selRes:1)-1+4)%4);}else{g._selRes=(((g._selRes!=null?g._selRes:1)+1)%4);}return;}if(g.ph==="dead"){if(g._lbQualifies&&!g._lbSubmitted){document.getElementById('lbInput').focus();}return;}for(const tc of e.changedTouches)proc(tc);},{passive:false});
+cv.addEventListener("touchstart",e=>{e.preventDefault();if(g.ph==="title"){initAudio();SFX.menuSelect();const r=cv.getBoundingClientRect();const ty=e.changedTouches[0].clientY-r.top;const h=r.height;if(ty<h*0.5){g._selRes=(((g._selRes!=null?g._selRes:1)-1+4)%4);}else{g._selRes=(((g._selRes!=null?g._selRes:1)+1)%4);}return;}if(g.ph==="dead"){if(g._lbQualifies&&!g._lbSubmitted){document.getElementById('lbInput').focus();}return;}for(const tc of e.changedTouches)proc(tc);},{passive:false});
 cv.addEventListener("touchmove",e=>{e.preventDefault();rst();for(const tc of e.touches)proc(tc,true);},{passive:false});
 cv.addEventListener("touchend",e=>{e.preventDefault();rst();for(const tc of e.touches)proc(tc,true);},{passive:false});
 cv.addEventListener("mousedown",e=>{if(g.ph==="title"){return;}if(g.ph==="dead"){if(g._lbQualifies&&!g._lbSubmitted){document.getElementById('lbInput').focus();}return;}proc({clientX:e.clientX,clientY:e.clientY});});
 window.addEventListener("mouseup",()=>rst());
 window.addEventListener("keydown",e=>{
-if(g.ph==="title"){if(e.key==="ArrowUp"||e.key==="w"){g._selRes=(((g._selRes!=null?g._selRes:1)-1+4)%4);e.preventDefault();initAudio();SFX.menuSelect();if(!BGM.playing)BGM.start();}if(e.key==="ArrowDown"||e.key==="s"){g._selRes=(((g._selRes!=null?g._selRes:1)+1)%4);e.preventDefault();initAudio();SFX.menuSelect();if(!BGM.playing)BGM.start();}if(e.key===" "||e.key==="Enter"){e.preventDefault();initAudio();SFX.startDrill();BGM.start();startGame();}return;}
+if(g.ph==="title"){if(e.key==="ArrowUp"||e.key==="w"){g._selRes=(((g._selRes!=null?g._selRes:1)-1+4)%4);e.preventDefault();initAudio();SFX.menuSelect();}if(e.key==="ArrowDown"||e.key==="s"){g._selRes=(((g._selRes!=null?g._selRes:1)+1)%4);e.preventDefault();initAudio();SFX.menuSelect();}if(e.key===" "||e.key==="Enter"){e.preventDefault();initAudio();SFX.startDrill();startGame();}return;}
 if(g.ph==="dead"){
   if(g._lbQualifies&&!g._lbSubmitted){
     // Name entry mode
@@ -918,14 +918,14 @@ lbInp.addEventListener('input',()=>{if(g.ph==="dead"&&g._lbQualifies&&!g._lbSubm
 lbInp.addEventListener('keydown',e=>{if(e.key==="Enter"&&g._lbName.length>0){e.preventDefault();g._lbSubmitted=true;lbInp.blur();const zp=g._lbZone||0;const rk=resOrder[g._selRes!=null?g._selRes:1];lbSubmit(rk,g._lbName,g._lbScore,g._lbFt||g.ft,g._lbCpf||g.costPerFt,zp);}});
 
 // Continue button
-contBtn.addEventListener('click',()=>{if(g.ph==="dead"){const sel=g._selRes;g=init();g._selRes=sel;BGM.start();if(bgmGain)bgmGain.gain.linearRampToValueAtTime(1.0,audioCtx?audioCtx.currentTime+0.5:0);}});
+contBtn.addEventListener('click',()=>{if(g.ph==="dead"){const sel=g._selRes;g=init();g._selRes=sel;if(bgmGain)bgmGain.gain.linearRampToValueAtTime(1.0,audioCtx?audioCtx.currentTime+0.5:0);}});
 
 // Drill button
 const drillBtn=document.getElementById('drillBtn');
 const helpBtn=document.getElementById('helpBtn');
 const tutorialDiv=document.getElementById('tutorial');
 const closeTutBtn=document.getElementById('closeTutorial');
-drillBtn.addEventListener('click',async()=>{if(g.ph==="title"){initAudio();if(audioCtx&&audioCtx.state==='suspended')await audioCtx.resume();SFX.startDrill();BGM.start();startGame();}});
+drillBtn.addEventListener('click',async()=>{if(g.ph==="title"){initAudio();if(audioCtx&&audioCtx.state==='suspended')await audioCtx.resume();SFX.startDrill();startGame();}});
 helpBtn.addEventListener('click',()=>{initAudio();tutorialDiv.style.display='block';});
 closeTutBtn.addEventListener('click',()=>{initAudio();tutorialDiv.style.display='none';});
 
@@ -933,7 +933,7 @@ closeTutBtn.addEventListener('click',()=>{initAudio();tutorialDiv.style.display=
 const muteBtn=document.getElementById('muteBtn');
 muteBtn.addEventListener('click',()=>{sfxMuted=!sfxMuted;muteBtn.textContent=sfxMuted?'🔇':'🔊';
   if(sfxMuted){SFX.rotateStop();SFX.slideStop();BGM.stop();}
-  else{BGM.start();if(g.ph==='playing'){if(!g.slide)SFX.rotateStart();else SFX.slideStart();}}
+  else{if(g.ph==='playing'){if(!g.slide)SFX.rotateStart();else SFX.slideStart();}}
   if(soundUnlockBtn.style.display!=='none'){soundUnlockBtn.textContent=sfxMuted?'🔇 OFF':'🔊 ON';soundUnlockBtn.style.background=sfxMuted?'#440000':'#004400';}
 });
 // Volume slider
@@ -962,6 +962,11 @@ function updateShareBtn(){
   drillBtn.style.display=g.ph==="title"?'block':'none';
   helpBtn.style.display=g.ph==="title"?'block':'none';
   soundUnlockBtn.style.display=(g.ph==="title"&&'ontouchstart' in window)?'block':'none';
+  // BGM management - play on title and during gameplay, stop on death
+  if(!sfxMuted&&audioCtx&&audioUnlocked){
+    if((g.ph==="title"||g.ph==="playing")&&!BGM.playing)BGM.start();
+    else if(g.ph==="dead"&&BGM.playing)BGM.stop();
+  }
   requestAnimationFrame(updateShareBtn);
 }
 updateShareBtn();
