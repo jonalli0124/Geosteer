@@ -764,7 +764,7 @@ requestAnimationFrame(tick);
 
 // INPUT
 const resOrder=["olmos","sanmiguel","austinchalk","eagleford"];
-function startGame(){const key=resOrder[g._selRes!=null?g._selRes:1];setReservoir(key);g=init();g._selRes=resOrder.indexOf(key);g.ph="playing";}
+function startGame(){const key=resOrder[g._selRes!=null?g._selRes:1];setReservoir(key);g=init();g._selRes=resOrder.indexOf(key);g.ph="playing";inp={u:0,d:0,l:0,r:0,mU:0,mD:0,sld:0,lcm:0};}
 function proc(tc,mv){const r=cv.getBoundingClientRect(),x=tc.clientX-r.left,y=tc.clientY-r.top,br=g._br;if(!br)return;const dx=x-br.dX,dy=y-br.dY,db=br.db;if(Math.abs(dx)<db*2.2&&Math.abs(dy)<db*2.2){if(dy<-db*0.25&&Math.abs(dx)<db*0.95)inp.u=1;if(dy>db*0.25&&Math.abs(dx)<db*0.95)inp.d=1;if(dx<-db*0.25&&Math.abs(dy)<db*0.95)inp.l=1;if(dx>db*0.25&&Math.abs(dy)<db*0.95)inp.r=1;}for(const b of br.btns){if(x>=b.bx&&x<=b.bx+b.bw&&y>=b.by&&y<=b.by+b.bh){if(b.k==="sld"&&!mv)inp.sld=inp.sld?0:1;else if(b.k==="lcm"&&!mv)inp.lcm=1;else if(b.k!=="sld"&&b.k!=="lcm")inp[b.k]=1;}}}
 function rst(){inp.u=0;inp.d=0;inp.l=0;inp.r=0;inp.mU=0;inp.mD=0;}
 cv.addEventListener("touchstart",e=>{e.preventDefault();if(g.ph==="title"){const r=cv.getBoundingClientRect();const ty=e.changedTouches[0].clientY-r.top;const h=r.height;if(ty<h*0.5){g._selRes=(((g._selRes!=null?g._selRes:1)-1+4)%4);}else{g._selRes=(((g._selRes!=null?g._selRes:1)+1)%4);}return;}if(g.ph==="dead"){if(g._lbQualifies&&!g._lbSubmitted){document.getElementById('lbInput').focus();}return;}for(const tc of e.changedTouches)proc(tc);},{passive:false});
