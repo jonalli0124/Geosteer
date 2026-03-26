@@ -432,8 +432,20 @@ ctx.strokeStyle="#7a9abc44";ctx.lineWidth=Math.round(2*S);
 ctx.beginPath();ctx.moveTo(x0,xsCY+p0.y-2);ctx.lineTo(x1,xsCY+p1.y-2);ctx.stroke();}
 for(const sv of g.surv){const px=bitSX+(sv.sx-g.sx),py=xsCY+sv.y;if(px>=0&&px<=xsW){ctx.fillStyle="#2255cc";ctx.beginPath();ctx.moveTo(px,py-5);ctx.lineTo(px+4,py);ctx.lineTo(px,py+5);ctx.lineTo(px-4,py);ctx.closePath();ctx.fill();}}
 for(const p of g.parts){ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,Math.round(4*S),Math.round(4*S));}
-drawBit(bitSX,xsCY+g.by,g.kick);
-const cf2=FM.find(f=>f.n===g.fm);ctx.font=`bold ${Math.max(9,Math.round(11*S))}px 'Courier New',monospace`;ctx.fillStyle=cf2&&cf2.tgt?"#00ff44":"#ff4400";ctx.shadowColor="#000";ctx.shadowBlur=4;ctx.fillText(cf2&&cf2.tgt?"● IN ZONE":"● "+g.fm,bitSX+28,xsCY+g.by+5);ctx.shadowBlur=0;
+drawBit(bitSX,xsCY+g.by,g.pit>650||g.pit<300);
+const cf2=FM.find(f=>f.n===g.fm);const bFont=Math.max(7,Math.round(8*S));const bLn=bFont+2;ctx.font=`bold ${bFont}px 'Courier New',monospace`;ctx.shadowColor="#000";ctx.shadowBlur=3;
+// IN ZONE / OUT ZONE - above bit center
+ctx.fillStyle=cf2&&cf2.tgt?"#00ff44":"#ff4400";
+ctx.fillText(cf2&&cf2.tgt?"● IN ZONE":"● OUT ZONE",bitSX+72,xsCY+g.by-bLn+2);
+// MUD UP/DOWN - centered on bit
+const rPP=Math.min(RES.ppStart+g.ft*RES.ppRate,RES.ppCap);
+const rFrac=g.thiefActive&&!g.lcmActive?Math.max(rPP-RES.thiefDrop,10.0):rPP+RES.window;
+if(g.mw<rPP){ctx.fillStyle="#ff4444";ctx.fillText("▲ MUD UP",bitSX+72,xsCY+g.by+2);}
+else if(g.mw>rFrac){ctx.fillStyle="#ff8844";ctx.fillText("▼ MUD DOWN",bitSX+72,xsCY+g.by+2);}
+else{ctx.fillStyle="#44aa44";ctx.fillText("● MW OK",bitSX+72,xsCY+g.by+2);}
+// SLIDE warning - below bit center, yellow at 60, red at 100
+if(Math.abs(g.azi)>100){ctx.fillStyle=Math.abs(g.azi)>120?"#ff2222":"#ffaa00";ctx.fillText("◄ SLIDE",bitSX+72,xsCY+g.by+bLn+2);}
+ctx.shadowBlur=0;
 ctx.textAlign="center";g.notifs.forEach((n,i)=>{ctx.globalAlpha=clamp(1-(g.fr-n.b)/220,0,1);ctx.font=`bold ${Math.round(15*S)}px 'Courier New',monospace`;ctx.shadowColor="#000";ctx.shadowBlur=6;ctx.fillStyle=n.tp==="danger"?"#ff2222":n.tp==="warn"?"#ddaa00":"#00ff44";ctx.fillText(n.t,xsW/2,xsY+Math.round(22*S)+i*Math.round(18*S));ctx.shadowBlur=0;});ctx.globalAlpha=1;ctx.textAlign="left";
 if(g.oozFt>250&&g.fr%18<9){ctx.fillStyle="rgba(255,100,0,0.04)";ctx.fillRect(0,xsY,xsW,xsH);}
 if(g.thiefActive&&g.fr%12<6){ctx.fillStyle="rgba(255,60,0,0.06)";ctx.fillRect(0,xsY,xsW,xsH);}
