@@ -12,6 +12,61 @@
 <button id="shareBtn" style="display:none;position:fixed;bottom:12px;right:12px;background:#00ff44;color:#000;border:none;padding:8px 16px;font-family:'Courier New',monospace;font-weight:bold;font-size:14px;border-radius:4px;cursor:pointer;z-index:10;">SHARE</button>
 <button id="contBtn" style="display:none;position:fixed;bottom:12px;left:12px;background:#224422;color:#00ff44;border:2px solid #00ff44;padding:8px 16px;font-family:'Courier New',monospace;font-weight:bold;font-size:14px;border-radius:4px;cursor:pointer;z-index:10;">CONTINUE</button>
 <button id="drillBtn" style="display:none;position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:#00ff44;color:#000;border:none;padding:10px 28px;font-family:'Courier New',monospace;font-weight:bold;font-size:16px;border-radius:4px;cursor:pointer;z-index:10;">DRILL</button>
+<button id="helpBtn" style="display:none;position:fixed;bottom:12px;left:12px;background:#224422;color:#00ff44;border:2px solid #00ff44;padding:8px 14px;font-family:'Courier New',monospace;font-weight:bold;font-size:12px;border-radius:4px;cursor:pointer;z-index:10;">HOW TO PLAY</button>
+<div id="tutorial" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:20;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+<div style="max-width:600px;margin:0 auto;padding:20px 16px;font-family:'Courier New',monospace;color:#ccc;line-height:1.6;">
+<h1 style="color:#00ff44;text-align:center;font-size:24px;margin-bottom:4px;">GEOSTEER</h1>
+<p style="color:#ee8800;text-align:center;font-size:12px;margin-bottom:20px;">SURVIVAL HORIZONTAL DRILLING SIMULATOR</p>
+
+<h2 style="color:#00ffcc;font-size:16px;margin-top:20px;">THE GOAL</h2>
+<p style="font-size:13px;">Drill the longest horizontal well at the lowest cost while staying in the target formation. Your score combines footage, cost efficiency, and zone percentage.</p>
+<p style="font-size:13px;color:#00ffcc;">SCORE = Footage × (92/$/ft) × (Zone%/100)</p>
+
+<h2 style="color:#00dd44;font-size:16px;margin-top:20px;">STEERING</h2>
+<p style="font-size:13px;"><span style="color:#00ff44;">▲▼</span> — Steer the bit up and down to stay in the green target zone. The zone gets thinner the deeper you drill.</p>
+<p style="font-size:13px;"><span style="color:#00ff44;">◀▶</span> — Control drilling speed. Faster = cheaper per foot, but harder to steer. Max speed decreases with wellbore length (friction).</p>
+
+<h2 style="color:#ddaa00;font-size:16px;margin-top:20px;">SLIDING</h2>
+<p style="font-size:13px;"><span style="color:#ddaa00;">[3] SLIDE</span> — Toggles the mud motor between slide and rotate mode. While rotating, the bit naturally walks right (azimuth increases). Sliding corrects this and pushes left.</p>
+<p style="font-size:13px;">Too much sliding overheats the motor (3 second cooldown). The <span style="color:#ddaa00;">◄ SLIDE</span> warning appears when azimuth exceeds 100'. If you hit the lease boundary (180'), the well is lost.</p>
+
+<h2 style="color:#44aaff;font-size:16px;margin-top:20px;">MUD WEIGHT (MW)</h2>
+<p style="font-size:13px;">The MW window <span style="color:#44aaff;">[12.5-13.0]</span> shows the safe range. Pore pressure (PP) creeps up with depth, forcing you to weight up over time.</p>
+<p style="font-size:13px;"><span style="color:#ddaa00;">[1] WEIGHT UP</span> — Increases MW. Costs mud on surface when MW is below PP.</p>
+<p style="font-size:13px;"><span style="color:#4488cc;">[2] CUT WEIGHT</span> — Decreases MW. Free but leaves you underbalanced.</p>
+<p style="font-size:13px;"><span style="color:#ff4444;">MW below PP</span> → Kick (pit gains). Weight up to kill it — but it takes time, the kick doesn't die instantly.</p>
+<p style="font-size:13px;"><span style="color:#ff8844;">MW above Frac</span> → Losses (pit drops). Cut weight to stop them.</p>
+
+<h2 style="color:#ff8844;font-size:16px;margin-top:20px;">THIEF ZONES</h2>
+<p style="font-size:13px;">Orange bands approaching from the right are thief zones — naturally fractured rock that drops the frac gradient. If your MW is too high when you enter, you'll take losses.</p>
+<p style="font-size:13px;"><span style="color:#00ff44;">Strategy:</span> See orange ahead → cut weight 1.0 ppg before entering → cruise through safely → weight back up after exiting (costs mud on surface).</p>
+<p style="font-size:13px;"><span style="color:#44aaff;">[4] LCM</span> — Emergency treatment that blocks the thief zone. You get 5 per well — use them wisely.</p>
+
+<h2 style="color:#ff4444;font-size:16px;margin-top:20px;">MUD ON SURFACE</h2>
+<p style="font-size:13px;">You start with 300 barrels. Every time you weight up to fight a kick or keep pace with PP creep, it costs mud. Losses below 500 pit also drain mud. When you run out, you can't weight up — the next kick is a blowout.</p>
+<p style="font-size:13px;">This is the endgame clock. Manage your thief zone encounters to conserve mud.</p>
+
+<h2 style="color:#ff2222;font-size:16px;margin-top:20px;">HOW YOU DIE</h2>
+<p style="font-size:13px;">• <span style="color:#ff4444;">Pit > 750</span> — Blowout (uncontrolled kick)</p>
+<p style="font-size:13px;">• <span style="color:#ff4444;">Pit ≤ 250</span> — Lost all mud (uncontrolled losses)</p>
+<p style="font-size:13px;">• <span style="color:#ff4444;">Out of lease</span> — Azimuth exceeded lease boundary</p>
+<p style="font-size:13px;">• <span style="color:#ff4444;">OOZ limit</span> — Too many feet out of zone (varies by reservoir)</p>
+
+<h2 style="color:#ddcc00;font-size:16px;margin-top:20px;">RESERVOIRS</h2>
+<p style="font-size:13px;"><span style="color:#ddaa00;">OLMOS ★★☆☆☆</span> — Thick zone, low MW, but tons of faults and thief zones. Fast ROP. Learn the basics here.</p>
+<p style="font-size:13px;"><span style="color:#00ff44;">2ND SAN MIGUEL ★★★☆☆</span> — Balanced. Tests everything equally. The default well.</p>
+<p style="font-size:13px;"><span style="color:#4488ff;">EAGLE FORD ★★★★☆</span> — Thin zone, heavy MW, few faults. Precision steering and tight MW management. Slow ROP.</p>
+<p style="font-size:13px;"><span style="color:#aa66ff;">AUSTIN CHALK ★★★★★</span> — Fractured nightmare. Constant thief zones, fast walk, aggressive zone shrink. LCM management is everything.</p>
+
+<h2 style="color:#888;font-size:16px;margin-top:20px;">HUD GUIDE</h2>
+<p style="font-size:13px;color:#888;">Header: GEO | Footage | $/ft | MUD | LCM | SLD | Score</p>
+<p style="font-size:13px;color:#888;">Top panel: VS (rig + well path) | GR bars + Gas trace</p>
+<p style="font-size:13px;color:#888;">HUD bar: Footage | MW [window] | ROP | GAS | Zone% | Slide | $/ft</p>
+<p style="font-size:13px;color:#888;">Next to bit: ● IN/OUT ZONE | MW status | SLIDE warning</p>
+
+<button id="closeTutorial" style="display:block;margin:30px auto 20px;background:#00ff44;color:#000;border:none;padding:10px 28px;font-family:'Courier New',monospace;font-weight:bold;font-size:16px;border-radius:4px;cursor:pointer;">GOT IT — LET'S DRILL</button>
+</div>
+</div>
 <button id="muteBtn" style="position:fixed;top:4px;right:4px;background:transparent;color:#888;border:1px solid #333;padding:3px 6px;font-family:'Courier New',monospace;font-size:11px;border-radius:3px;cursor:pointer;z-index:10;">🔊</button>
 <input id="volSlider" type="range" min="0" max="100" value="50" style="position:fixed;top:6px;right:36px;width:60px;height:12px;z-index:10;accent-color:#00ff44;opacity:0.6;">
 <script>
@@ -126,8 +181,9 @@ function setReservoir(key){
 }
 
 // SOUND ENGINE — all synthesized, no files needed
-let audioCtx=null,sfxMuted=false,masterGain=null,masterVol=0.5;
-function initAudio(){if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();masterGain=audioCtx.createGain();masterGain.gain.value=masterVol;masterGain.connect(audioCtx.destination);}if(audioCtx.state==='suspended')audioCtx.resume();}
+let audioCtx=null,sfxMuted=false,masterGain=null,masterVol=0.5,audioUnlocked=false;
+function initAudio(){if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();masterGain=audioCtx.createGain();masterGain.gain.value=masterVol;masterGain.connect(audioCtx.destination);}if(audioCtx.state==='suspended')audioCtx.resume();if(!audioUnlocked&&audioCtx){audioUnlocked=true;const b=audioCtx.createBuffer(1,1,22050);const s=audioCtx.createBufferSource();s.buffer=b;s.connect(audioCtx.destination);s.start(0);}}
+['touchstart','touchend','mousedown','keydown'].forEach(evt=>{document.addEventListener(evt,function u(){initAudio();document.removeEventListener(evt,u);},{once:true});});
 const SFX={
   _env(vol,attack,decay){const g=audioCtx.createGain();g.gain.setValueAtTime(0,audioCtx.currentTime);g.gain.linearRampToValueAtTime(vol,audioCtx.currentTime+attack);g.gain.linearRampToValueAtTime(0,audioCtx.currentTime+attack+decay);g.connect(masterGain);return g;},
   _noise(dur){const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*dur,audioCtx.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const src=audioCtx.createBufferSource();src.buffer=buf;return src;},
@@ -847,7 +903,12 @@ contBtn.addEventListener('click',()=>{if(g.ph==="dead"){const sel=g._selRes;g=in
 
 // Drill button
 const drillBtn=document.getElementById('drillBtn');
+const helpBtn=document.getElementById('helpBtn');
+const tutorialDiv=document.getElementById('tutorial');
+const closeTutBtn=document.getElementById('closeTutorial');
 drillBtn.addEventListener('click',()=>{if(g.ph==="title"){initAudio();SFX.startDrill();BGM.start();startGame();}});
+helpBtn.addEventListener('click',()=>{tutorialDiv.style.display='block';});
+closeTutBtn.addEventListener('click',()=>{tutorialDiv.style.display='none';});
 
 // Mute button
 const muteBtn=document.getElementById('muteBtn');
@@ -876,6 +937,7 @@ function updateShareBtn(){
   shareBtn.style.display=showDead?'block':'none';
   contBtn.style.display=showDead?'block':'none';
   drillBtn.style.display=g.ph==="title"?'block':'none';
+  helpBtn.style.display=g.ph==="title"?'block':'none';
   requestAnimationFrame(updateShareBtn);
 }
 updateShareBtn();
