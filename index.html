@@ -69,6 +69,7 @@
 </div>
 <button id="muteBtn" style="position:fixed;top:4px;right:4px;background:transparent;color:#888;border:1px solid #333;padding:3px 6px;font-family:'Courier New',monospace;font-size:11px;border-radius:3px;cursor:pointer;z-index:10;">🔊</button>
 <input id="volSlider" type="range" min="0" max="100" value="70" style="position:fixed;top:6px;right:36px;width:60px;height:12px;z-index:10;accent-color:#00ff44;opacity:0.6;">
+<button id="soundUnlock" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#00ff44;color:#000;border:none;padding:16px 32px;font-family:'Courier New',monospace;font-weight:bold;font-size:18px;border-radius:6px;cursor:pointer;z-index:30;display:none;">🔊 TAP TO ENABLE SOUND</button>
 <script>
 const cv=document.getElementById("cv"),ctx=cv.getContext("2d");
 const SEG_W=22,SCROLL_BASE=0.7,LEASE_HALF=180;
@@ -184,6 +185,18 @@ function setReservoir(key){
 let audioCtx=null,sfxMuted=false,masterGain=null,masterVol=0.7,audioUnlocked=false;
 function initAudio(){if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();masterGain=audioCtx.createGain();masterGain.gain.value=masterVol;masterGain.connect(audioCtx.destination);}if(audioCtx.state==='suspended')audioCtx.resume();if(!audioUnlocked&&audioCtx){audioUnlocked=true;const b=audioCtx.createBuffer(1,1,22050);const s=audioCtx.createBufferSource();s.buffer=b;s.connect(audioCtx.destination);s.start(0);}}
 ['touchstart','touchend','mousedown','keydown'].forEach(evt=>{document.addEventListener(evt,function u(){initAudio();document.removeEventListener(evt,u);},{once:true});});
+// Show unlock button on mobile
+const soundUnlockBtn=document.getElementById('soundUnlock');
+if('ontouchstart' in window){soundUnlockBtn.style.display='block';}
+soundUnlockBtn.addEventListener('click',async function(){
+  if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();masterGain=audioCtx.createGain();masterGain.gain.value=masterVol;masterGain.connect(audioCtx.destination);}
+  await audioCtx.resume();
+  // Play audible test tone to confirm
+  const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=440;
+  const g=audioCtx.createGain();g.gain.setValueAtTime(0.3,audioCtx.currentTime);g.gain.linearRampToValueAtTime(0,audioCtx.currentTime+0.3);
+  g.connect(masterGain);o.connect(g);o.start();o.stop(audioCtx.currentTime+0.3);
+  audioUnlocked=true;soundUnlockBtn.style.display='none';
+});
 const SFX={
   _env(vol,attack,decay){const g=audioCtx.createGain();g.gain.setValueAtTime(0,audioCtx.currentTime);g.gain.linearRampToValueAtTime(vol,audioCtx.currentTime+attack);g.gain.linearRampToValueAtTime(0,audioCtx.currentTime+attack+decay);g.connect(masterGain);return g;},
   _noise(dur){const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*dur,audioCtx.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const src=audioCtx.createBufferSource();src.buffer=buf;return src;},
