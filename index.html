@@ -187,7 +187,6 @@ function initAudio(){if(!audioCtx){audioCtx=new(window.AudioContext||window.webk
 ['touchstart','touchend','mousedown','keydown'].forEach(evt=>{document.addEventListener(evt,function u(){initAudio();document.removeEventListener(evt,u);},{once:true});});
 // Show unlock button on mobile
 const soundUnlockBtn=document.getElementById('soundUnlock');
-if('ontouchstart' in window){soundUnlockBtn.style.display='block';}
 soundUnlockBtn.addEventListener('click',async function(){
   if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();masterGain=audioCtx.createGain();masterGain.gain.value=masterVol;masterGain.connect(audioCtx.destination);bgmGain=audioCtx.createGain();bgmGain.gain.value=1.0;bgmGain.connect(masterGain);}
   await audioCtx.resume();
@@ -962,6 +961,7 @@ function updateShareBtn(){
   contBtn.style.display=showDead?'block':'none';
   drillBtn.style.display=g.ph==="title"?'block':'none';
   helpBtn.style.display=g.ph==="title"?'block':'none';
+  soundUnlockBtn.style.display=(g.ph==="title"&&'ontouchstart' in window)?'block':'none';
   requestAnimationFrame(updateShareBtn);
 }
 updateShareBtn();
