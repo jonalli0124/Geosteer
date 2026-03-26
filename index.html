@@ -20,7 +20,7 @@ sanmiguel:{
   startMW:12.8,ppStart:12.5,ppRate:0.00015,ppCap:15.5,window:0.5,
   thiefDrop:0.5,thiefBase:0.025,thiefRandom:0.0003,
   faultRate:0.13,bwRate:0.12,walkSpd:0.060,
-  zoneShrink:0.00004,
+  zoneShrink:0.00004,oozMax:750,ropCap:400,
   fm:[
     {n:"OLMOS",th:12,gr:75,t:"#3a4a2a",m:"#324222",b:"#2a3a1a",lbl:"OLMOS",lc:"#5a6a3a"},
     {n:"1ST SAN MIGUEL",th:10,gr:55,t:"#4a4030",m:"#403828",b:"#383020",lbl:"1ST SM",lc:"#6a5a40"},
@@ -33,14 +33,14 @@ sanmiguel:{
 olmos:{
   name:"OLMOS",desc:"MAVERICK BASIN — SHALLOW & FAULTED",diff:"★★☆☆☆",
   color:"#ddaa00",
-  startMW:10.2,ppStart:9.8,ppRate:0.00012,ppCap:13.0,window:0.5,
-  thiefDrop:0.5,thiefBase:0.04,thiefRandom:0.0005,
-  faultRate:0.22,bwRate:0.10,walkSpd:0.050,
-  zoneShrink:0.00003,
+  startMW:10.2,ppStart:9.8,ppRate:0.00012,ppCap:13.0,window:0.6,
+  thiefDrop:0.5,thiefBase:0.05,thiefRandom:0.0006,
+  faultRate:0.25,bwRate:0.08,walkSpd:0.040,
+  zoneShrink:0.00002,oozMax:1000,ropCap:500,
   fm:[
     {n:"ESCONDIDO",th:12,gr:65,t:"#3a3a2a",m:"#323222",b:"#2a2a1a",lbl:"ESCOND",lc:"#5a5a3a"},
     {n:"OLMOS COAL",th:6,gr:40,t:"#1a1a0a",m:"#141408",b:"#0e0e04",lbl:"COAL",lc:"#333"},
-    {n:"OLMOS",th:10,gr:50,t:"#4a5a2a",m:"#3e4e20",b:"#324218",lbl:"OLMOS",lc:"#ddaa00",tgt:true},
+    {n:"OLMOS",th:12,gr:50,t:"#4a5a2a",m:"#3e4e20",b:"#324218",lbl:"OLMOS",lc:"#ddaa00",tgt:true},
     {n:"1ST SAN MIGUEL",th:10,gr:55,t:"#4a4030",m:"#403828",b:"#383020",lbl:"1ST SM",lc:"#6a5a40"},
     {n:"2ND SAN MIGUEL",th:8,gr:35,t:"#0a4a1a",m:"#084010",b:"#063808",lbl:"2ND SM",lc:"#1a5a2a"},
     {n:"UPSON CLAY",th:10,gr:120,t:"#1e1e1e",m:"#181818",b:"#121212",lbl:"UPSON",lc:"#444"},
@@ -50,13 +50,13 @@ eagleford:{
   name:"EAGLE FORD",desc:"SOUTH TEXAS — HIGH PRESSURE",diff:"★★★★☆",
   color:"#4488ff",
   startMW:14.5,ppStart:14.2,ppRate:0.00010,ppCap:16.5,window:0.4,
-  thiefDrop:0.4,thiefBase:0.015,thiefRandom:0.0002,
-  faultRate:0.08,bwRate:0.14,walkSpd:0.055,
-  zoneShrink:0.00005,
+  thiefDrop:0.3,thiefBase:0.008,thiefRandom:0.0001,
+  faultRate:0.05,bwRate:0.14,walkSpd:0.060,
+  zoneShrink:0.00006,oozMax:250,ropCap:150,
   fm:[
     {n:"AUSTIN CHALK",th:14,gr:20,t:"#1a3a6a",m:"#143060",b:"#0e2450",lbl:"A.CHALK",lc:"#2a5a9a"},
     {n:"UPPER EF",th:8,gr:110,t:"#1a1a1a",m:"#141414",b:"#0e0e0e",lbl:"UPR EF",lc:"#444"},
-    {n:"LOWER EF",th:6,gr:150,t:"#0a0a0a",m:"#080808",b:"#050505",lbl:"LWR EF",lc:"#4488ff",tgt:true},
+    {n:"LOWER EF",th:5,gr:150,t:"#0a0a0a",m:"#080808",b:"#050505",lbl:"LWR EF",lc:"#4488ff",tgt:true},
     {n:"BUDA LIME",th:10,gr:18,t:"#6a5a3a",m:"#5e4e30",b:"#524228",lbl:"BUDA",lc:"#8a7a5a"},
     {n:"DEL RIO",th:10,gr:90,t:"#2a2a2a",m:"#222222",b:"#1a1a1a",lbl:"DEL RIO",lc:"#555"},
     {n:"GEORGETOWN",th:12,gr:30,t:"#3a3228",m:"#322a22",b:"#2a221a",lbl:"GTOWN",lc:"#5a5040"},
@@ -66,9 +66,9 @@ austinchalk:{
   name:"AUSTIN CHALK",desc:"SOUTH TEXAS — FRACTURED NIGHTMARE",diff:"★★★★★",
   color:"#aa66ff",
   startMW:12.0,ppStart:11.5,ppRate:0.00013,ppCap:15.0,window:0.5,
-  thiefDrop:0.8,thiefBase:0.05,thiefRandom:0.0008,
-  faultRate:0.10,bwRate:0.15,walkSpd:0.065,
-  zoneShrink:0.00006,
+  thiefDrop:0.8,thiefBase:0.06,thiefRandom:0.001,
+  faultRate:0.12,bwRate:0.15,walkSpd:0.065,
+  zoneShrink:0.00005,oozMax:500,ropCap:250,
   fm:[
     {n:"TAYLOR MARL",th:14,gr:80,t:"#2a2a22",m:"#22221a",b:"#1a1a14",lbl:"TAYLOR",lc:"#4a4a3a"},
     {n:"UPPER CHALK",th:10,gr:25,t:"#2a4a7a",m:"#1e3e6a",b:"#14305a",lbl:"UPR CK",lc:"#3a6a9a"},
@@ -112,7 +112,7 @@ let g,inp={u:0,d:0,l:0,r:0,mU:0,mD:0,sld:0,lcm:0};
 function init(){return{ph:"title",terr:genTerrain(),by:0,vy:0,sx:0,spd:SCROLL_BASE,
 ft:0,inZ:0,totFt:0,mw:RES.startMW,rop:60,slide:false,
 gas:0,gasHist:[],peakGas:0,pit:500,mudOnLoc:300,lcm:5,lcmActive:false,lcmTimer:0,
-kick:false,kickSev:0,loss:false,lossSev:0,oozFt:0,oozMax:1000,
+kick:false,kickSev:0,loss:false,lossSev:0,oozFt:0,oozMax:RES.oozMax,
 azi:0,bwRate:RES.bwRate,leaseW:false,
 inc:90,prevInc:90,dls:0,dlsHist:[],maxDls:0,avgDls:0,dlsSum:0,dlsCt:0,lastDlsFt:0,
 // Cost tracking — $/ft model
@@ -148,12 +148,16 @@ if(timestamp-lastFrameTime<FRAME_MS){requestAnimationFrame(tick);return;}
 lastFrameTime=timestamp;
 const W=cv.width,H=cv.height;if(W<10||H<10){requestAnimationFrame(tick);return;}
 const isPortrait=H>W;const isTouch='ontouchstart' in window;
-const S=isPortrait?Math.min(W/320,H/650):Math.min(W/400,H/550);
-const hdrH=Math.round(32*S),topH=Math.round(isPortrait?90*S:110*S),footH=Math.round(28*S);
-const ctrlH=Math.round(isTouch?(isPortrait?150*S:120*S):100*S);
-const xsH=H-hdrH-topH-footH-ctrlH,grW=Math.round(50*S);
+const S=Math.min(W/380,H/600,2.0); // cap at 2x for big monitors
+// Fixed pixel budgets that work on small phones
+const hdrH=Math.max(24,Math.round(28*S));
+const topH=isPortrait?Math.max(60,Math.round(75*S)):Math.round(100*S);
+const footH=Math.max(20,Math.round(22*S));
+const ctrlH=isTouch?Math.max(100,Math.round(isPortrait?120*S:100*S)):Math.round(90*S);
+const xsH=Math.max(80,H-hdrH-topH-footH-ctrlH);
+const grW=Math.max(30,Math.round(isPortrait?35*S:45*S));
 const xsW=W-grW,xsY=hdrH+topH,xsCY=xsY+xsH/2;
-const bitSX=xsW/2,vsW=Math.round(Math.min(W*0.22,90*S));
+const bitSX=xsW/2,vsW=Math.round(Math.min(W*0.18,80*S));
 const fmOff=(TGT_FRAC-0.5)*xsH*0.95;
 g.fr++;const d=diff(g.ft);
 
@@ -187,7 +191,7 @@ g.ft=g.sx*2.5; // footage from scroll position
 
 // ROP display: map speed to 0-400 ft/hr for display
 // speed 0.12→17 ft/hr, speed 0.7→100 ft/hr, speed 2.8→400 ft/hr
-g.rop=g.spd*(300/2.8);
+g.rop=g.spd*(RES.ropCap/2.8);
 
 if(inp.mU&&g.mudOnLoc>0){g.mw+=0.008;}
 if(inp.mD){g.mw=Math.max(g.mw-0.008,9.0);}
@@ -327,7 +331,7 @@ else if(g.pit>550)g.cmt=`PIT GAIN +${(g.pit-500).toFixed(0)}bbl — WT UP [1]`;
 else if(g.pit<450)g.cmt=`PIT LOSS -${(500-g.pit).toFixed(0)}bbl — CUT WT [2]`;
 else if(g.leaseW)g.cmt=`LEASE! AZI:${g.azi.toFixed(0)}' — SLIDE [3]`;
 else if(g.slideOverheat)g.cmt=`OVERHEAT! Rotate ${Math.ceil(g.slideOhTimer/60)}s`;
-else if(g.oozFt>400)g.cmt=`OOZ ${g.oozFt.toFixed(0)}'/${g.oozMax}'`;
+else if(g.oozFt>g.oozMax*0.4)g.cmt=`OOZ ${g.oozFt.toFixed(0)}'/${g.oozMax}'`;
 else if(inZone){g.cmt=`In zone | MW:${g.mw.toFixed(1)} Window:${effPP.toFixed(1)}-${effFrac.toFixed(1)} | $${g.costPerFt.toFixed(0)}/ft`;}
 else g.cmt=`${cf.n} — OUT OF ZONE ${g.oozFt.toFixed(0)}'`;
 g.notifs=g.notifs.filter(n=>g.fr-n.b<220);
@@ -350,22 +354,22 @@ const tgtFm=selR.fm.find(f=>f.tgt);let tgtAcc=0;for(const f of selR.fm){if(f.tgt
 const bitY=py+((tgtAcc+tgtFm.th/2)/fmTot)*ph;drawBit(W*0.62,bitY,false);
 
 // Title
-ctx.textAlign="center";ctx.shadowColor="#00ff44";ctx.shadowBlur=20;ctx.font=`bold ${Math.round(32*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("GEOSTEER",W/2,H*0.06);ctx.shadowBlur=0;
-ctx.font=`${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle="#ee8800";ctx.fillText("SURVIVAL HORIZONTAL DRILLING SIMULATOR",W/2,H*0.09);
+ctx.textAlign="center";ctx.shadowColor="#00ff44";ctx.shadowBlur=20;ctx.font=`bold ${Math.max(18,Math.round(28*S))}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("GEOSTEER",W/2,H*0.06);ctx.shadowBlur=0;
+ctx.font=`${Math.max(8,Math.round(10*S))}px 'Courier New',monospace`;ctx.fillStyle="#ee8800";ctx.fillText("SURVIVAL HORIZONTAL DRILLING SIMULATOR",W/2,H*0.09);
 
 // Reservoir selector
-const selY=H*0.34;
-ctx.font=`bold ${Math.round(10*S)}px 'Courier New',monospace`;ctx.fillStyle="#888";ctx.fillText("▲▼ SELECT RESERVOIR",W/2,selY-Math.round(14*S));
+const selY=H*0.34;const tF=Math.max(8,Math.round(9*S));
+ctx.font=`bold ${tF}px 'Courier New',monospace`;ctx.fillStyle="#888";ctx.fillText("▲▼ SELECT RESERVOIR",W/2,selY-Math.round(12*S));
 for(let i=0;i<resOrder.length;i++){
-  const r=RESERVOIRS[resOrder[i]];const isSel=i===g._selRes;const ly=selY+i*Math.round(20*S);
-  ctx.font=`bold ${Math.round(isSel?13:10)*S}px 'Courier New',monospace`;
+  const r=RESERVOIRS[resOrder[i]];const isSel=i===g._selRes;const ly=selY+i*Math.round(16*S);
+  ctx.font=`bold ${isSel?tF+2:tF}px 'Courier New',monospace`;
   ctx.fillStyle=isSel?r.color:"#555";
   const arrow=isSel?"► ":"  ";
   ctx.fillText(`${arrow}${r.name} — ${r.desc}  ${r.diff}`,W/2,ly);
 }
 
 // Instructions
-ctx.font=`bold ${Math.round(10*S)}px 'Courier New',monospace`;const instY=H*0.56;
+ctx.font=`bold ${tF}px 'Courier New',monospace`;const instY=H*0.55;
 [{t:"DRILL THE LONGEST WELL AT THE LOWEST COST",c:"#00ffcc"},{t:"",c:""},
 {t:"▲▼ STEER  ◀▶ SPEED  [3] SLIDE  [4] LCM",c:"#00dd44"},
 {t:"[1] WEIGHT UP  [2] CUT WEIGHT",c:"#ddaa00"},{t:"",c:""},
@@ -373,22 +377,22 @@ ctx.font=`bold ${Math.round(10*S)}px 'Courier New',monospace`;const instY=H*0.56
 {t:"THIEF ZONES LOWER THE WINDOW — CUT WEIGHT EARLY",c:"#ff8844"},
 {t:"WEIGHTING UP USES MUD ON SURFACE — IT'S FINITE!",c:"#ff4444"},
 {t:"THE DEEPER YOU GO, THE HARDER EVERYTHING GETS",c:"#ee8800"},
-].forEach((l,i)=>{ctx.fillStyle=l.c;ctx.fillText(l.t,W/2,instY+i*Math.round(14*S));});
-if(g.fr%28<14){ctx.font=`bold ${Math.round(18*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("SPACE / TAP TO DRILL",W/2,H*0.93);}
+].forEach((l,i)=>{ctx.fillStyle=l.c;ctx.fillText(l.t,W/2,instY+i*Math.round(12*S));});
+if(g.fr%28<14){ctx.font=`bold ${Math.max(12,Math.round(15*S))}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("SPACE / TAP TO DRILL",W/2,H*0.93);}
 ctx.textAlign="left";requestAnimationFrame(tick);return;}
 
 const fmO=(TGT_FRAC-0.5)*xsH*0.95;
 // HEADER
 ctx.fillStyle="#0a0a0a";ctx.fillRect(0,0,W,hdrH);
-const hF=Math.min(Math.round(12*S),14);ctx.font=`bold ${hF}px 'Courier New',monospace`;
-ctx.fillStyle="#ee8800";ctx.fillText("GEOSTEER",4,hdrH*0.65);
-ctx.textAlign="center";ctx.fillStyle="#eee";ctx.fillText(`${g.ft.toFixed(0)}'`,W*0.18,hdrH*0.65);
-if(W>400){ctx.fillStyle="#aaa";ctx.fillText(`ROP:${g.rop.toFixed(0)}`,W*0.30,hdrH*0.65);}
-ctx.fillStyle=g.costPerFt<100?"#00ff44":g.costPerFt<130?"#ddcc00":"#ff4444";ctx.font=`bold ${Math.min(Math.round(14*S),16)}px 'Courier New',monospace`;ctx.fillText(`$${g.costPerFt.toFixed(0)}/ft`,W*(W>400?0.43:0.35),hdrH*0.65);
-ctx.font=`bold ${hF}px 'Courier New',monospace`;ctx.fillStyle="#ff8844";ctx.fillText(`MUD:${g.mudOnLoc.toFixed(0)}`,W*(W>400?0.57:0.50),hdrH*0.65);
-ctx.fillStyle=g.lcm>0?"#44aaff":"#882222";ctx.fillText(`LCM:${g.lcm}`,W*(W>400?0.70:0.63),hdrH*0.65);
-if(W>350){const shC=g.slideHeat>70?"#ff4444":g.slideHeat>40?"#ddaa00":"#228844";ctx.fillStyle=shC;ctx.fillText(`SLD:${g.slideHeat.toFixed(0)}%`,W*0.82,hdrH*0.65);}
-ctx.textAlign="right";const zPct=g.totFt>0?g.inZ/g.totFt:0;const liveScore=g.costPerFt>0?Math.round(g.ft*(92/g.costPerFt)*zPct):0;ctx.fillStyle="#00ffcc";ctx.font=`bold ${hF}px 'Courier New',monospace`;ctx.fillText(`${liveScore.toLocaleString()}`,W-4,hdrH*0.65);ctx.textAlign="left";
+const hF=Math.max(9,Math.min(Math.round(11*S),14));ctx.font=`bold ${hF}px 'Courier New',monospace`;
+ctx.fillStyle="#ee8800";ctx.fillText("GEO",4,hdrH*0.68);
+ctx.textAlign="center";ctx.fillStyle="#eee";ctx.fillText(`${g.ft.toFixed(0)}'`,W*0.14,hdrH*0.68);
+ctx.fillStyle=g.costPerFt<100?"#00ff44":g.costPerFt<130?"#ddcc00":"#ff4444";ctx.fillText(`$${g.costPerFt.toFixed(0)}`,W*0.25,hdrH*0.68);
+ctx.fillStyle="#ff8844";ctx.fillText(`M:${g.mudOnLoc.toFixed(0)}`,W*0.36,hdrH*0.68);
+ctx.fillStyle=g.lcm>0?"#44aaff":"#882222";ctx.fillText(`L:${g.lcm}`,W*0.46,hdrH*0.68);
+if(W>360){ctx.fillStyle="#aaa";ctx.fillText(`ROP:${g.rop.toFixed(0)}`,W*0.57,hdrH*0.68);}
+if(W>420){const shC=g.slideHeat>70?"#ff4444":g.slideHeat>40?"#ddaa00":"#228844";ctx.fillStyle=shC;ctx.fillText(`SLD:${g.slideHeat.toFixed(0)}%`,W*0.70,hdrH*0.68);}
+ctx.textAlign="right";const zPct=g.totFt>0?g.inZ/g.totFt:0;const liveScore=g.costPerFt>0?Math.round(g.ft*(92/g.costPerFt)*zPct):0;ctx.fillStyle="#00ffcc";ctx.fillText(`${liveScore.toLocaleString()}`,W-4,hdrH*0.68);ctx.textAlign="left";
 
 // TOP: VS + GR/gas + gamma
 const topY=hdrH;ctx.fillStyle="#0a0e08";ctx.fillRect(0,topY,vsW,topH);
@@ -398,11 +402,11 @@ ctx.strokeStyle="#ff4444";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(pCX-lpH,pT)
 ctx.strokeStyle="#00ff4433";ctx.lineWidth=1;ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(pCX,pT);ctx.lineTo(pCX,pB);ctx.stroke();ctx.setLineDash([]);
 ctx.font=`bold ${Math.round(8*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff4444";ctx.textAlign="center";ctx.fillText("LEASE",pCX-lpH,pT-2);ctx.fillText("LEASE",pCX+lpH,pT-2);ctx.textAlign="left";
 // Rig sprite at wellhead
-if(rigReady){const rw=Math.round(36*S),rh=Math.round(50*S);ctx.drawImage(rigImg,pCX-rw/2,pT-2,rw,rh);}
+if(rigReady){const rw=Math.round(vsW*0.35),rh=Math.round(rw*67/48);ctx.drawImage(rigImg,pCX-rw/2,pT,rw,rh);}
 ctx.strokeStyle="#3a6898";ctx.lineWidth=2;ctx.beginPath();let ps=false;
 for(let i=0;i<g.wp.length;i+=3){const p=g.wp[i];const py2=pT+4+(p.x/Math.max(1,g.sx+50))*pH2*0.9;const px2=pCX+(p.a/LEASE_HALF)*lpH;if(py2>pT&&py2<pB){if(!ps){ctx.moveTo(clamp(px2,2,vsW-2),py2);ps=true;}else ctx.lineTo(clamp(px2,2,vsW-2),py2);}}ctx.stroke();
 const bpX=pCX+(g.azi/LEASE_HALF)*lpH;ctx.fillStyle=g.leaseW?"#ff4400":"#ffcc00";ctx.beginPath();ctx.arc(clamp(bpX,3,vsW-3),pB-5,Math.round(3*S),0,Math.PI*2);ctx.fill();
-ctx.font=`bold ${Math.round(9*S)}px 'Courier New',monospace`;ctx.fillStyle=g.leaseW?"#ff6644":"#44ff44";ctx.textAlign="center";ctx.fillText(`AZI:${g.azi.toFixed(0)}'`,vsW/2,pB+Math.round(8*S));ctx.textAlign="left";ctx.strokeStyle="#333";ctx.lineWidth=1;ctx.strokeRect(0,topY,vsW,topH);
+ctx.font=`bold ${Math.max(7,Math.round(8*S))}px 'Courier New',monospace`;ctx.fillStyle=g.leaseW?"#ff6644":"#44ff44";ctx.textAlign="center";ctx.fillText(`AZI:${g.azi.toFixed(0)}'`,vsW/2,pB-3);ctx.textAlign="left";ctx.strokeStyle="#333";ctx.lineWidth=1;ctx.strokeRect(0,topY,vsW,topH);
 ctx.fillStyle="#0a0a0a";ctx.fillRect(vsW,topY,W-vsW,topH);const barX=vsW,barW=W-vsW-grW,mxB=Math.floor(barW/3),rec=g.gl.slice(-mxB);
 for(let i=0;i<rec.length;i++){const bx=barX+(i/mxB)*barW;const bh=(rec[i].gr/200)*topH*0.7;ctx.fillStyle=rec[i].gr>80?"#882222":"#446622";ctx.fillRect(bx,topY+topH-bh,3,bh);}
 if(g.gasHist.length>1){ctx.strokeStyle="#ff3333";ctx.lineWidth=3;ctx.beginPath();const hist=g.gasHist.slice(-mxB);for(let i=0;i<hist.length;i++){const x=barX+(i/hist.length)*barW;const y=topY+topH-(hist[i]/1400)*topH*0.8;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}
@@ -426,7 +430,7 @@ ctx.beginPath();ctx.moveTo(x0,xsCY+p0.y-2);ctx.lineTo(x1,xsCY+p1.y-2);ctx.stroke
 for(const sv of g.surv){const px=bitSX+(sv.sx-g.sx),py=xsCY+sv.y;if(px>=0&&px<=xsW){ctx.fillStyle="#2255cc";ctx.beginPath();ctx.moveTo(px,py-5);ctx.lineTo(px+4,py);ctx.lineTo(px,py+5);ctx.lineTo(px-4,py);ctx.closePath();ctx.fill();}}
 for(const p of g.parts){ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,Math.round(4*S),Math.round(4*S));}
 drawBit(bitSX,xsCY+g.by,g.kick);
-const cf2=FM.find(f=>f.n===g.fm);ctx.font=`bold ${Math.round(13*S)}px 'Courier New',monospace`;ctx.fillStyle=cf2&&cf2.tgt?"#00ff44":"#ff4400";ctx.shadowColor="#000";ctx.shadowBlur=4;ctx.fillText(cf2&&cf2.tgt?"● IN ZONE":"● "+g.fm,bitSX+32,xsCY+g.by+5);ctx.shadowBlur=0;
+const cf2=FM.find(f=>f.n===g.fm);ctx.font=`bold ${Math.max(9,Math.round(11*S))}px 'Courier New',monospace`;ctx.fillStyle=cf2&&cf2.tgt?"#00ff44":"#ff4400";ctx.shadowColor="#000";ctx.shadowBlur=4;ctx.fillText(cf2&&cf2.tgt?"● IN ZONE":"● "+g.fm,bitSX+28,xsCY+g.by+5);ctx.shadowBlur=0;
 ctx.textAlign="center";g.notifs.forEach((n,i)=>{ctx.globalAlpha=clamp(1-(g.fr-n.b)/220,0,1);ctx.font=`bold ${Math.round(15*S)}px 'Courier New',monospace`;ctx.shadowColor="#000";ctx.shadowBlur=6;ctx.fillStyle=n.tp==="danger"?"#ff2222":n.tp==="warn"?"#ddaa00":"#00ff44";ctx.fillText(n.t,xsW/2,xsY+Math.round(22*S)+i*Math.round(18*S));ctx.shadowBlur=0;});ctx.globalAlpha=1;ctx.textAlign="left";
 if(g.oozFt>250&&g.fr%18<9){ctx.fillStyle="rgba(255,100,0,0.04)";ctx.fillRect(0,xsY,xsW,xsH);}
 if(g.thiefActive&&g.fr%12<6){ctx.fillStyle="rgba(255,60,0,0.06)";ctx.fillRect(0,xsY,xsW,xsH);}
@@ -437,8 +441,8 @@ ctx.fillStyle="#080808";ctx.fillRect(xsW,xsY,grW,xsH);const rsi=clamp(Math.floor
 const rgl2=g.gl.slice(-Math.floor(xsH/2));if(rgl2.length>1){ctx.strokeStyle="#00bbee";ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<rgl2.length;i++){const y=xsY+3+(i/rgl2.length)*(xsH-6);const x=xsW+clamp(rgl2[i].gr/200,0,1)*grW;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}
 
 // HUD
-const hudH=Math.round(20*S),hudY=xsY+xsH-hudH;ctx.fillStyle="rgba(0,0,0,0.82)";ctx.fillRect(0,hudY,xsW,hudH);
-const hudF=Math.min(Math.round(10*S),13);ctx.font=`bold ${hudF}px 'Courier New',monospace`;
+const hudH=Math.max(16,Math.round(18*S)),hudY=xsY+xsH-hudH;ctx.fillStyle="rgba(0,0,0,0.85)";ctx.fillRect(0,hudY,xsW,hudH);
+const hudF=Math.max(8,Math.min(Math.round(9*S),12));ctx.font=`bold ${hudF}px 'Courier New',monospace`;
 ctx.fillStyle="#00dd44";ctx.fillText(`${g.ft.toFixed(0)}'`,4,hudY+hudH*0.65);
 // MW window — always visible. Compute effective PP/Frac for current formation
 const si3=clamp(Math.floor(g.sx/SEG_W),0,g.terr.length-2);
@@ -454,7 +458,7 @@ if(xsW>280){ctx.fillStyle="#aaa";ctx.fillText(`ROP:${g.rop.toFixed(0)}`,xsW*0.38
 ctx.fillStyle="#ff3333";ctx.fillText(`GAS:${g.gas.toFixed(0)}`,xsW*(xsW>280?0.50:0.38),hudY+hudH*0.65);
 const oozF=g.oozFt/g.oozMax;if(oozF>0.05){ctx.fillStyle=oozF>0.6?"#ff2222":"#ff8844";ctx.fillText(`OOZ:${g.oozFt.toFixed(0)}'`,xsW*(xsW>280?0.62:0.52),hudY+hudH*0.65);}else{const zp2=g.totFt>0?(g.inZ/g.totFt*100):0;ctx.fillStyle=zp2>70?"#00dd44":"#ddaa00";ctx.fillText(`ZN:${zp2.toFixed(0)}%`,xsW*(xsW>280?0.62:0.52),hudY+hudH*0.65);}
 ctx.fillStyle=g.slideOverheat?"#ff2222":(g.slide?"#ffaa00":"#555");ctx.fillText(g.slideOverheat?"HOT":(g.slide?"SLD":"ROT"),xsW*(xsW>280?0.74:0.65),hudY+hudH*0.65);
-ctx.fillStyle=g.costPerFt<100?"#00ff44":g.costPerFt<130?"#ddcc00":"#ff4444";ctx.font=`bold ${Math.min(Math.round(11*S),14)}px 'Courier New',monospace`;ctx.textAlign="right";ctx.fillText(`$${g.costPerFt.toFixed(0)}/ft`,xsW-4,hudY+hudH*0.65);ctx.textAlign="left";
+ctx.fillStyle=g.costPerFt<100?"#00ff44":g.costPerFt<130?"#ddcc00":"#ff4444";ctx.textAlign="right";ctx.fillText(`$${g.costPerFt.toFixed(0)}/ft`,xsW-4,hudY+hudH*0.65);ctx.textAlign="left";
 
 // FOOTER
 const ftY=xsY+xsH;ctx.fillStyle="#0a0a0a";ctx.fillRect(0,ftY,W,footH);ctx.font=`bold ${Math.round(10*S)}px 'Courier New',monospace`;ctx.fillStyle=(g.pit>550||g.pit<450||g.leaseW||g.oozFt>250||g.slideOverheat||g.thiefActive)?"#ff8888":"#aaa";ctx.fillText("TEAM: "+g.cmt,5,ftY+footH*0.62);
