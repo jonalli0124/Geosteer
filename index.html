@@ -68,7 +68,7 @@
 </div>
 </div>
 <button id="muteBtn" style="position:fixed;top:4px;right:4px;background:transparent;color:#888;border:1px solid #333;padding:3px 6px;font-family:'Courier New',monospace;font-size:11px;border-radius:3px;cursor:pointer;z-index:10;">🔊</button>
-<input id="volSlider" type="range" min="0" max="100" value="50" style="position:fixed;top:6px;right:36px;width:60px;height:12px;z-index:10;accent-color:#00ff44;opacity:0.6;">
+<input id="volSlider" type="range" min="0" max="100" value="70" style="position:fixed;top:6px;right:36px;width:60px;height:12px;z-index:10;accent-color:#00ff44;opacity:0.6;">
 <script>
 const cv=document.getElementById("cv"),ctx=cv.getContext("2d");
 const SEG_W=22,SCROLL_BASE=0.7,LEASE_HALF=180;
@@ -181,7 +181,7 @@ function setReservoir(key){
 }
 
 // SOUND ENGINE — all synthesized, no files needed
-let audioCtx=null,sfxMuted=false,masterGain=null,masterVol=0.5,audioUnlocked=false;
+let audioCtx=null,sfxMuted=false,masterGain=null,masterVol=0.7,audioUnlocked=false;
 function initAudio(){if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();masterGain=audioCtx.createGain();masterGain.gain.value=masterVol;masterGain.connect(audioCtx.destination);}if(audioCtx.state==='suspended')audioCtx.resume();if(!audioUnlocked&&audioCtx){audioUnlocked=true;const b=audioCtx.createBuffer(1,1,22050);const s=audioCtx.createBufferSource();s.buffer=b;s.connect(audioCtx.destination);s.start(0);}}
 ['touchstart','touchend','mousedown','keydown'].forEach(evt=>{document.addEventListener(evt,function u(){initAudio();document.removeEventListener(evt,u);},{once:true});});
 const SFX={
@@ -906,9 +906,9 @@ const drillBtn=document.getElementById('drillBtn');
 const helpBtn=document.getElementById('helpBtn');
 const tutorialDiv=document.getElementById('tutorial');
 const closeTutBtn=document.getElementById('closeTutorial');
-drillBtn.addEventListener('click',()=>{if(g.ph==="title"){initAudio();SFX.startDrill();BGM.start();startGame();}});
-helpBtn.addEventListener('click',()=>{tutorialDiv.style.display='block';});
-closeTutBtn.addEventListener('click',()=>{tutorialDiv.style.display='none';});
+drillBtn.addEventListener('click',async()=>{if(g.ph==="title"){initAudio();if(audioCtx&&audioCtx.state==='suspended')await audioCtx.resume();SFX.startDrill();BGM.start();startGame();}});
+helpBtn.addEventListener('click',()=>{initAudio();tutorialDiv.style.display='block';});
+closeTutBtn.addEventListener('click',()=>{initAudio();tutorialDiv.style.display='none';});
 
 // Mute button
 const muteBtn=document.getElementById('muteBtn');
