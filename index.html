@@ -118,7 +118,7 @@ inc:90,prevInc:90,dls:0,dlsHist:[],maxDls:0,avgDls:0,dlsSum:0,dlsCt:0,lastDlsFt:
 // Cost tracking — $/ft model
 costTotal:0,costPerFt:0,
 gl:[],mwdB:[],wp:[],notifs:[],nid:0,fr:0,
-fm:RES.name,fFl:0,surv:[],lastSv:0,_br:null,drift:0,parts:[],
+fm:RES.name,fFl:0,surv:[],lastSv:0,_br:null,drift:0,parts:[],wellHist:[],
 cmt:"Standing by...",deathReason:"",
 thiefActive:false,thiefTimer:0,
 ppCreep:0, // pore pressure increases over time, forcing MW up
@@ -223,12 +223,15 @@ const cb=lerp(g.terr[si].base,g.terr[si+1].base,sf);
 const bounds=getBounds(xsCY,cb-fmOff,xsH,g.ft);const bitSY=xsCY+g.by;
 let cf=FM[FM.length-1];for(const b of bounds){if(bitSY>=b.top&&bitSY<b.bot){cf=b.fm;break;}}
 g.fm=cf.n;const inZone=!!cf.tgt;
+// Record bit fraction through formation stack for minimap
+const stackTop=bounds[0].top,stackBot=bounds[bounds.length-1].bot;
+const bitFrac=stackBot>stackTop?clamp((bitSY-stackTop)/(stackBot-stackTop),0,1):0.5;
 
 // OOZ
 if(!inZone){g.oozFt+=ftDr;if(g.oozFt>=g.oozMax)die(`OOZ ${g.oozFt.toFixed(0)}'!`);}else{g.oozFt=Math.max(0,g.oozFt-ftDr*0.3);}
 
 // Gas
-if(inZone)g.gas=lerp(g.gas,200+Math.random()*400+g.ft*0.05+d*80,0.06);else g.gas=lerp(g.gas,20+Math.random()*40+cf.gr*0.3,0.05);
+if(inZone)g.gas=lerp(g.gas,400+Math.random()*300,0.06);else g.gas=lerp(g.gas,20+Math.random()*40+cf.gr*0.3,0.05);
 g.peakGas=Math.max(g.peakGas,g.gas);g.gasHist.push(g.gas);if(g.gasHist.length>300)g.gasHist.shift();
 if(inZone)g.inZ+=ftDr;
 g.totFt+=ftDr;
@@ -284,6 +287,7 @@ if(g.fr%2===0){g.wp.push({x:g.sx,y:g.by,a:g.azi,dls:g.dls});if(g.wp.length>2000)
 if(g.ft-g.lastSv>=90){g.lastSv=g.ft;g.surv.push({ft:g.ft,sx:g.sx,y:g.by});}
 if(bitSY<xsY+3||bitSY>xsY+xsH-3)die("LOST HOLE!");
 const s1=g.terr[si];if(s1.fault&&g.fFl===0){g.fFl=35;addN(`FAULT ${s1.fTh.toFixed(0)}'`,"warn");}if(g.fFl>0)g.fFl--;
+if(g.fr%10===0){const rPP2=Math.min(RES.ppStart+g.ft*RES.ppRate,RES.ppCap);const rFr2=g.thiefActive&&!g.lcmActive?Math.max(rPP2-RES.thiefDrop,10.0):rPP2+RES.window;g.wellHist.push({f:bitFrac,b:s1.base,z:!!cf.tgt,t:s1.thief,ta:g.thiefActive,fault:s1.fault,fTh:s1.fTh,a:g.azi,lcm:g.lcmActive,gr:cf.gr+(Math.random()-0.5)*14,gas:g.gas,mw:g.mw,pp:rPP2,fr:rFr2});}
 
 // Thief zones — lower the local frac gradient, so high MW = losses
 // Thief zone detection
@@ -496,21 +500,203 @@ g._br={dX,dY:dY2,db,btns:btns.map(b=>({...b,bx:btnStartX+gap+b.col*(bW+gap),by:b
 }
 
 // DEATH
-if(g.ph==="dead"){ctx.fillStyle="rgba(0,0,0,0.90)";ctx.fillRect(0,0,W,H);ctx.textAlign="center";
-ctx.shadowColor="#ff2222";ctx.shadowBlur=20;ctx.font=`bold ${Math.round(30*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff2222";ctx.fillText("WELL LOST",W/2,H*0.10);ctx.shadowBlur=0;
-ctx.font=`bold ${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle=RES.color;ctx.fillText(RES.name,W/2,H*0.15);
-ctx.font=`bold ${Math.round(14*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff8844";ctx.fillText(g.deathReason,W/2,H*0.19);
+if(g.ph==="dead"){ctx.fillStyle="#000";ctx.fillRect(0,0,W,H);ctx.textAlign="center";
+// VS panel on right side
+const dvX=W*0.72,dvW=W*0.25,dvY=H*0.03,dvH=H*0.28;
+ctx.fillStyle="#080808";ctx.fillRect(dvX,dvY,dvW,dvH);ctx.strokeStyle="#333";ctx.lineWidth=1;ctx.strokeRect(dvX,dvY,dvW,dvH);
+ctx.save();ctx.beginPath();ctx.rect(dvX,dvY,dvW,dvH);ctx.clip();
+// Lease lines
+ctx.strokeStyle="#ff220066";ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(dvX+4,dvY);ctx.lineTo(dvX+4,dvY+dvH);ctx.stroke();
+ctx.beginPath();ctx.moveTo(dvX+dvW-4,dvY);ctx.lineTo(dvX+dvW-4,dvY+dvH);ctx.stroke();
+ctx.font=`${Math.max(6,Math.round(6*S))}px 'Courier New',monospace`;ctx.fillStyle="#ff4444";ctx.textAlign="center";
+ctx.fillText("LEASE",dvX+dvW*0.12,dvY+Math.round(10*S));ctx.fillText("LEASE",dvX+dvW*0.88,dvY+Math.round(10*S));
+// Rig at top
+if(rigReady){const rw=Math.round(dvW*0.2),rh=Math.round(rw*67/48);ctx.drawImage(rigImg,dvX+dvW/2-rw/2,dvY+4,rw,rh);}
+// Well path through VS (azimuth plot) - colored by zone status
+if(g.wellHist.length>2){
+  const hist=g.wellHist;const vcx=dvX+dvW/2;
+  // Center line
+  ctx.strokeStyle="#ffffff11";ctx.lineWidth=1;ctx.setLineDash([2,4]);
+  ctx.beginPath();ctx.moveTo(vcx,dvY);ctx.lineTo(vcx,dvY+dvH);ctx.stroke();ctx.setLineDash([]);
+  // Well path - segment by segment colored by zone
+  ctx.lineWidth=2;
+  for(let i=1;i<hist.length;i++){
+    const vy0=dvY+20+((i-1)/hist.length)*(dvH-28);
+    const vy1=dvY+20+(i/hist.length)*(dvH-28);
+    const vx0=vcx+(hist[i-1].a/LEASE_HALF)*dvW*0.42;
+    const vx1=vcx+(hist[i].a/LEASE_HALF)*dvW*0.42;
+    ctx.strokeStyle=hist[i].z?"#44ff88":"#ff4444";
+    ctx.beginPath();ctx.moveTo(clamp(vx0,dvX+6,dvX+dvW-6),vy0);ctx.lineTo(clamp(vx1,dvX+6,dvX+dvW-6),vy1);ctx.stroke();
+  }
+  // Endpoint marker
+  const last=hist[hist.length-1];const ey=dvY+dvH-10;const ex=vcx+(last.a/LEASE_HALF)*dvW*0.42;
+  ctx.fillStyle="#ffcc00";ctx.beginPath();ctx.arc(clamp(ex,dvX+6,dvX+dvW-6),ey,4,0,Math.PI*2);ctx.fill();
+  // Final walk distance
+  ctx.font=`${Math.max(7,Math.round(8*S))}px 'Courier New',monospace`;ctx.fillStyle="#ffcc00";ctx.textAlign="center";
+  ctx.fillText(`AZI: ${Math.abs(last.a).toFixed(0)}'`,dvX+dvW/2,dvY+dvH-2);
+}
+ctx.restore();
+ctx.font=`${Math.max(6,Math.round(7*S))}px 'Courier New',monospace`;ctx.fillStyle="#666";ctx.textAlign="center";ctx.fillText("VERTICAL SECTION",dvX+dvW/2,dvY+dvH+Math.round(10*S));
+// Stats on left side
+const stX=W*0.33;
+ctx.shadowColor="#ff2222";ctx.shadowBlur=20;ctx.font=`bold ${Math.round(26*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff2222";ctx.fillText("WELL LOST",stX,H*0.07);ctx.shadowBlur=0;
+ctx.font=`bold ${Math.round(11*S)}px 'Courier New',monospace`;ctx.fillStyle=RES.color;ctx.fillText(RES.name,stX,H*0.11);
+ctx.font=`bold ${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle="#ff8844";ctx.fillText(g.deathReason,stX,H*0.15);
 const zpF=g.totFt>0?(g.inZ/g.totFt*100):0;const slideP=g.totalFr>0?Math.round(g.slideFr/g.totalFr*100):0;
 const finalScore=g.costPerFt>0?Math.round(g.ft*(92/g.costPerFt)*(zpF/100)):0;
-ctx.fillStyle="#00ffcc";ctx.font=`bold ${Math.round(32*S)}px 'Courier New',monospace`;ctx.fillText(`SCORE: ${finalScore.toLocaleString()}`,W/2,H*0.24);
+ctx.fillStyle="#00ffcc";ctx.font=`bold ${Math.round(26*S)}px 'Courier New',monospace`;ctx.fillText(`SCORE: ${finalScore.toLocaleString()}`,stX,H*0.20);
 ctx.fillStyle=g.costPerFt<100?"#00ff44":g.costPerFt<130?"#ddcc00":"#ff4444";
-ctx.font=`bold ${Math.round(18*S)}px 'Courier New',monospace`;ctx.fillText(`${g.ft.toFixed(0)}'  @  $${g.costPerFt.toFixed(0)}/ft`,W/2,H*0.30);
-ctx.font=`${Math.round(11*S)}px 'Courier New',monospace`;ctx.fillStyle="#888";ctx.fillText(`Zone: ${zpF.toFixed(1)}%  |  $/ft efficiency: ${(g.costPerFt>0?(92/g.costPerFt*100).toFixed(0):0)}%`,W/2,H*0.34);
-ctx.font=`${Math.round(12*S)}px 'Courier New',monospace`;ctx.fillStyle="#ddd";
-ctx.fillText(`Zone:${zpF.toFixed(1)}%  |  Total: $${(g.costTotal/1000).toFixed(0)}K  |  Slide:${slideP}%`,W/2,H*0.39);
-ctx.fillStyle="#888";ctx.fillText(`Mud:${g.mudOnLoc.toFixed(0)}bbl  |  LCM:${5-g.lcm} used  |  Diff:${diff(g.ft).toFixed(1)}x`,W/2,H*0.44);
-drawBit(W/2,H*0.52,false);
-if(g.fr%28<14){ctx.font=`bold ${Math.round(18*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("TAP / SPACE TO CONTINUE",W/2,H*0.64);}ctx.textAlign="left";}
+ctx.font=`bold ${Math.round(14*S)}px 'Courier New',monospace`;ctx.fillText(`${g.ft.toFixed(0)}'  @  $${g.costPerFt.toFixed(0)}/ft`,stX,H*0.25);
+ctx.font=`${Math.round(9*S)}px 'Courier New',monospace`;ctx.fillStyle="#aaa";
+ctx.fillText(`Zone:${zpF.toFixed(0)}%  |  Slide:${slideP}%  |  Mud:${g.mudOnLoc.toFixed(0)}bbl  |  LCM:${5-g.lcm} used`,stX,H*0.29);
+// Well path minimap
+if(g.wellHist.length>2){
+const mapX=W*0.03,mapW=W*0.94,mapY=H*0.34,mapH=H*0.26;
+ctx.fillStyle="#080808";ctx.fillRect(mapX,mapY,mapW,mapH);ctx.strokeStyle="#333";ctx.lineWidth=1;ctx.strokeRect(mapX,mapY,mapW,mapH);
+const hist=g.wellHist;
+// Find terrain base range to auto-scale
+let minB=Infinity,maxB=-Infinity;
+for(const h of hist){minB=Math.min(minB,h.b);maxB=Math.max(maxB,h.b);}
+const baseMid=(minB+maxB)/2;const baseRange=Math.max(maxB-minB,20);
+const mapCY=mapY+mapH/2;
+const fmTot=FM.reduce((a,f)=>a+f.th,0);
+const tgtFm=FM.find(f=>f.tgt);let tgtA=0;for(const f of FM){if(f===tgtFm)break;tgtA+=f.th;}
+const tgtMid=(tgtA+tgtFm.th/2)/fmTot;
+// Scale formations to fit within map, accounting for terrain drift
+const fmScale=mapH*0.6;const baseScale=mapH*0.3/baseRange;
+for(let i=0;i<hist.length;i++){
+  const x=mapX+(i/hist.length)*mapW;const sw=Math.max(1,mapW/hist.length+0.5);
+  const bOff=(hist[i].b-baseMid)*baseScale; // terrain shift
+  let fAcc=0;
+  for(const f of FM){
+    const y0=mapCY+bOff+(fAcc/fmTot-tgtMid)*fmScale;fAcc+=f.th;
+    const y1=mapCY+bOff+(fAcc/fmTot-tgtMid)*fmScale;
+    const t=Math.max(mapY,y0),b=Math.min(mapY+mapH,y1);
+    if(b>t){ctx.fillStyle=f.m;ctx.fillRect(x,t,sw,b-t);
+      if(f.tgt){ctx.fillStyle="#00ff4450";ctx.fillRect(x,t,sw,b-t);}
+    }
+  }
+}
+// Faults as purple dashed lines with size labels (skip if too close)
+ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.strokeStyle="#aa44ff88";
+let lastFaultX=-999;
+for(let i=0;i<hist.length;i++){
+  if(hist[i].fault&&hist[i].fTh>5){
+    const x=mapX+(i/hist.length)*mapW;
+    ctx.beginPath();ctx.moveTo(x,mapY);ctx.lineTo(x,mapY+mapH);ctx.stroke();
+    if(hist[i].fTh>20&&x-lastFaultX>40){ctx.setLineDash([]);ctx.font=`bold ${Math.max(8,Math.round(8*S))}px 'Courier New',monospace`;ctx.fillStyle="#cc88ff";ctx.textAlign="center";ctx.fillText(Math.round(hist[i].fTh)+"'",x,mapY+Math.round(11*S));ctx.textAlign="left";ctx.setLineDash([3,3]);lastFaultX=x;}
+  }
+}
+// Thief zones as red dashed lines
+ctx.strokeStyle="#ff2222aa";ctx.lineWidth=1.5;
+for(let i=0;i<hist.length;i++){
+  if(hist[i].t){const x=mapX+(i/hist.length)*mapW;ctx.beginPath();ctx.moveTo(x,mapY);ctx.lineTo(x,mapY+mapH);ctx.stroke();}
+}
+ctx.setLineDash([]);
+// Target zone boundary dashed lines
+ctx.strokeStyle="#00ff4444";ctx.lineWidth=1;ctx.setLineDash([4,4]);
+const tgtTop=tgtA/fmTot-tgtMid,tgtBot=(tgtA+tgtFm.th)/fmTot-tgtMid;
+ctx.beginPath();for(let i=0;i<hist.length;i++){const x=mapX+(i/hist.length)*mapW;const y=mapCY+(hist[i].b-baseMid)*baseScale+tgtTop*fmScale;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
+ctx.beginPath();for(let i=0;i<hist.length;i++){const x=mapX+(i/hist.length)*mapW;const y=mapCY+(hist[i].b-baseMid)*baseScale+tgtBot*fmScale;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
+ctx.setLineDash([]);
+// Wellbore path - f is bit position as fraction through formation stack (0=top, 1=bottom)
+ctx.lineWidth=2;
+for(let i=1;i<hist.length;i++){
+  const x0=mapX+((i-1)/hist.length)*mapW,x1=mapX+(i/hist.length)*mapW;
+  const bOff0=(hist[i-1].b-baseMid)*baseScale,bOff1=(hist[i].b-baseMid)*baseScale;
+  // Stack spans from (0/fmTot - tgtMid) to (1 - tgtMid) in fmScale units from mapCY+bOff
+  const sTop0=mapCY+bOff0+(0-tgtMid)*fmScale,sBot0=mapCY+bOff0+(1-tgtMid)*fmScale;
+  const sTop1=mapCY+bOff1+(0-tgtMid)*fmScale,sBot1=mapCY+bOff1+(1-tgtMid)*fmScale;
+  const y0=clamp(sTop0+hist[i-1].f*(sBot0-sTop0),mapY+1,mapY+mapH-1);
+  const y1=clamp(sTop1+hist[i].f*(sBot1-sTop1),mapY+1,mapY+mapH-1);
+  ctx.strokeStyle=hist[i].z?"#00ff88":"#ff4444";
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+}
+// Footage labels
+ctx.font=`${Math.round(7*S)}px 'Courier New',monospace`;ctx.fillStyle="#666";ctx.textAlign="left";
+ctx.fillText("0'",mapX+3,mapY+mapH-3);ctx.textAlign="right";ctx.fillText(g.ft.toFixed(0)+"'",mapX+mapW-3,mapY+mapH-3);
+// LCM X markers on wellbore
+ctx.textAlign="center";ctx.font=`bold ${Math.max(10,Math.round(11*S))}px 'Courier New',monospace`;ctx.fillStyle="#ffffff";
+for(let i=1;i<hist.length;i++){
+  // Detect LCM activation edge: was off, now on
+  if(hist[i].lcm&&!hist[i-1].lcm){
+    const x=mapX+(i/hist.length)*mapW;
+    const bOff=(hist[i].b-baseMid)*baseScale;
+    const sTop=mapCY+bOff+(0-tgtMid)*fmScale,sBot=mapCY+bOff+(1-tgtMid)*fmScale;
+    const y=clamp(sTop+hist[i].f*(sBot-sTop),mapY+1,mapY+mapH-1);
+    ctx.fillText("×",x,y+4);
+  }
+}
+// GR and Gas curves below minimap
+const curveY=mapY+mapH+3,curveH=H*0.08;
+ctx.fillStyle="#060606";ctx.fillRect(mapX,curveY,mapW,curveH);ctx.strokeStyle="#222";ctx.lineWidth=1;ctx.strokeRect(mapX,curveY,mapW,curveH);
+// Thief zone overlays on GR panel
+for(let i=0;i<hist.length;i++){
+  if(hist[i].t){const x=mapX+(i/hist.length)*mapW;const sw=Math.max(1,mapW/hist.length+0.5);
+    ctx.fillStyle="#ff222218";ctx.fillRect(x,curveY,sw,curveH);}
+}
+// GR curve - green bars
+let maxGas=1;for(const h of hist)maxGas=Math.max(maxGas,h.gas||1);
+for(let i=0;i<hist.length;i++){
+  const x=mapX+(i/hist.length)*mapW;const sw=Math.max(1,mapW/hist.length+0.5);
+  const grH=clamp((hist[i].gr||30)/200,0,1)*curveH*0.9;
+  ctx.fillStyle=hist[i].gr>80?"#44222288":"#22662288";
+  ctx.fillRect(x,curveY+curveH-grH,sw,grH);
+}
+// Gas curve - red line
+ctx.strokeStyle="#ff3333";ctx.lineWidth=2;ctx.beginPath();
+for(let i=0;i<hist.length;i++){
+  const x=mapX+(i/hist.length)*mapW;
+  const y=curveY+curveH-clamp((hist[i].gas||0)/maxGas,0,1)*curveH*0.85-2;
+  i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+}
+ctx.stroke();
+// Labels
+ctx.font=`${Math.max(6,Math.round(6*S))}px 'Courier New',monospace`;
+ctx.textAlign="left";ctx.fillStyle="#446622";ctx.fillText("GR",mapX+3,curveY+Math.round(9*S));
+ctx.fillStyle="#ff4444";ctx.fillText("GAS",mapX+3,curveY+curveH-3);
+// MW window trend below GR/gas
+const mwY=curveY+curveH+3,mwH=H*0.08;
+ctx.fillStyle="#060606";ctx.fillRect(mapX,mwY,mapW,mwH);ctx.strokeStyle="#222";ctx.lineWidth=1;ctx.strokeRect(mapX,mwY,mapW,mwH);
+// Thief zone overlays on MW panel
+for(let i=0;i<hist.length;i++){
+  if(hist[i].t){const x=mapX+(i/hist.length)*mapW;const sw=Math.max(1,mapW/hist.length+0.5);
+    ctx.fillStyle="#ff222218";ctx.fillRect(x,mwY,sw,mwH);}
+}
+// Find MW range for scaling
+let mwMin=99,mwMax=0;
+for(const h of hist){mwMin=Math.min(mwMin,h.pp||10,h.mw||10);mwMax=Math.max(mwMax,h.fr||16,h.mw||16);}
+mwMin=Math.floor(mwMin-0.5);mwMax=Math.ceil(mwMax+0.5);const mwRange=Math.max(mwMax-mwMin,2);
+function mwToY(v){return mwY+mwH-clamp((v-mwMin)/mwRange,0,1)*mwH*0.9-2;}
+// PP line (bottom of window) - dashed cyan
+ctx.strokeStyle="#44aaff88";ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();
+for(let i=0;i<hist.length;i++){const x=mapX+(i/hist.length)*mapW;const y=mwToY(hist[i].pp||12);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+ctx.stroke();
+// Frac line (top of window) - dashed cyan
+ctx.beginPath();
+for(let i=0;i<hist.length;i++){const x=mapX+(i/hist.length)*mapW;const y=mwToY(hist[i].fr||13);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+ctx.stroke();ctx.setLineDash([]);
+// Fill the window band
+ctx.fillStyle="#44aaff10";ctx.beginPath();
+for(let i=0;i<hist.length;i++){const x=mapX+(i/hist.length)*mapW;ctx.lineTo(x,mwToY(hist[i].pp||12));}
+for(let i=hist.length-1;i>=0;i--){const x=mapX+(i/hist.length)*mapW;ctx.lineTo(x,mwToY(hist[i].fr||13));}
+ctx.closePath();ctx.fill();
+// Actual MW line - solid yellow
+ctx.strokeStyle="#ffcc00";ctx.lineWidth=2;ctx.beginPath();
+for(let i=0;i<hist.length;i++){const x=mapX+(i/hist.length)*mapW;const y=mwToY(hist[i].mw||12);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+ctx.stroke();
+// Labels
+ctx.font=`${Math.max(6,Math.round(6*S))}px 'Courier New',monospace`;
+ctx.textAlign="left";ctx.fillStyle="#44aaff";ctx.fillText("PP/FRAC",mapX+3,mwY+Math.round(9*S));
+ctx.fillStyle="#ffcc00";ctx.fillText("MW",mapX+3,mwY+mwH-3);
+// Scale labels on right
+ctx.textAlign="right";ctx.fillStyle="#666";
+ctx.fillText(mwMax.toFixed(1),mapX+mapW-3,mwY+Math.round(9*S));
+ctx.fillText(mwMin.toFixed(1),mapX+mapW-3,mwY+mwH-3);
+ctx.textAlign="center";
+}
+if(g.fr%28<14){ctx.font=`bold ${Math.round(14*S)}px 'Courier New',monospace`;ctx.fillStyle="#00ff44";ctx.fillText("TAP / SPACE TO CONTINUE",W/2,H*0.88);}ctx.textAlign="left";}
 
 requestAnimationFrame(tick);
 }
