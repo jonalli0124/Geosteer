@@ -579,17 +579,17 @@ for(let i=0;i<hist.length;i++){
   }
 }
 // Faults as purple dashed lines with size labels (skip if too close)
-ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.strokeStyle="#aa44ff88";
+ctx.lineWidth=1;ctx.setLineDash([4,6]);ctx.strokeStyle="#aa44ff44";
 let lastFaultX=-999;
 for(let i=0;i<hist.length;i++){
-  if(hist[i].fault&&hist[i].fTh>5){
+  if(hist[i].fault&&hist[i].fTh>15){
     const x=mapX+(i/hist.length)*mapW;
     ctx.beginPath();ctx.moveTo(x,mapY);ctx.lineTo(x,mapY+mapH);ctx.stroke();
     if(hist[i].fTh>20&&x-lastFaultX>40){ctx.setLineDash([]);ctx.font=`bold ${Math.max(8,Math.round(8*S))}px 'Courier New',monospace`;ctx.fillStyle="#cc88ff";ctx.textAlign="center";ctx.fillText(Math.round(hist[i].fTh)+"'",x,mapY+Math.round(11*S));ctx.textAlign="left";ctx.setLineDash([3,3]);lastFaultX=x;}
   }
 }
 // Thief zones as red dashed lines
-ctx.strokeStyle="#ff2222aa";ctx.lineWidth=1.5;
+ctx.strokeStyle="#ff222244";ctx.lineWidth=1;
 for(let i=0;i<hist.length;i++){
   if(hist[i].t){const x=mapX+(i/hist.length)*mapW;ctx.beginPath();ctx.moveTo(x,mapY);ctx.lineTo(x,mapY+mapH);ctx.stroke();}
 }
@@ -634,7 +634,7 @@ ctx.fillStyle="#060606";ctx.fillRect(mapX,curveY,mapW,curveH);ctx.strokeStyle="#
 // Thief zone overlays on GR panel
 for(let i=0;i<hist.length;i++){
   if(hist[i].t){const x=mapX+(i/hist.length)*mapW;const sw=Math.max(1,mapW/hist.length+0.5);
-    ctx.fillStyle="#ff222218";ctx.fillRect(x,curveY,sw,curveH);}
+    ctx.fillStyle="#ff220010";ctx.fillRect(x,curveY,sw,curveH);}
 }
 // GR curve - green bars
 let maxGas=1;for(const h of hist)maxGas=Math.max(maxGas,h.gas||1);
@@ -662,7 +662,7 @@ ctx.fillStyle="#060606";ctx.fillRect(mapX,mwY,mapW,mwH);ctx.strokeStyle="#222";c
 // Thief zone overlays on MW panel
 for(let i=0;i<hist.length;i++){
   if(hist[i].t){const x=mapX+(i/hist.length)*mapW;const sw=Math.max(1,mapW/hist.length+0.5);
-    ctx.fillStyle="#ff222218";ctx.fillRect(x,mwY,sw,mwH);}
+    ctx.fillStyle="#ff220010";ctx.fillRect(x,mwY,sw,mwH);}
 }
 // Find MW range for scaling
 let mwMin=99,mwMax=0;
